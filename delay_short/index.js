@@ -1,4 +1,4 @@
-const asleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const { asleep } = require('../_tools/js/sys.js');
 
 (async function () {
   console.log('SHORT step 1/5')
