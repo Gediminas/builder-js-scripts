@@ -1,6 +1,7 @@
-const asleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const git = require('../_tools/js/vc_git.js');
 
 (async function () {
   console.log('GIT CLONE OR UPDATE')
-  await asleep(2000);
+  git.getclean('git@gitlab.com:gdsx/play_cpp.git', '_repo');
 })();
+
