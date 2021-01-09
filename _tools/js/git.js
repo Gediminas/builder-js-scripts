@@ -31,7 +31,9 @@ exports.getclean_repo = (repo, dir, branch) => {
   else {
     console.log('Cloning git repository ['+repo+'] to ['+dir+']');
     try {
-    _child.execFileSync("git", ["clone", "--progress", "--recursive", "-b", branch, repo, dir], opts);
+      // FIXME: git clone sends progress to stderr
+      //_child.execFileSync("git", ["clone", "--progress", "--recursive", "-b", branch, repo, dir], opts);
+      _child.execFileSync("git", ["clone", "--quiet", "--recursive", "-b", branch, repo, dir], opts);
     }
     catch (e) {
         console.log("EXCEPTION `FROM SCRIPT: ", e);
@@ -44,23 +46,17 @@ exports.getclean_repo = (repo, dir, branch) => {
 exports.getclean = (repo, dir, branch) => {
   console.log(`@sub GetClean(${repo}, ${dir}, ${branch})`);
 
-  dir    = _path.resolve(dir);
-  branch = (branch == undefined) ? 'master' : branch;
-  let ret = exports.getclean_repo(repo, dir, branch);
+  const resolved_dir    = _path.resolve(dir);
+  const resolved_branch = (branch == undefined) ? 'master' : branch;
 
-  /*
-  try {
-    let submodules = JSON.parse(_fs.readFileSync(dir+'/.submodules', 'utf8'));
-    submodules.forEach(function(submodule) {
-      //exports.getclean_repo(submodule[0], dir+'/'+submodule[1], branch);
-    });
-  }
-  catch (e) {
-    if (e.code != 'ENOENT') {
-      console.log(e);
-    }
-  }
-  */
+  console.log(`repo   : ${repo}`);
+  console.log(`dir    : ${resolved_dir}`);
+  console.log(`branch : ${resolved_branch}`);
+
+  const ret = exports.getclean_repo(repo, resolved_dir, resolved_branch);
+
+  console.log(`result : ${ret}`);
+
   console.log('@end');
   return ret;
 }

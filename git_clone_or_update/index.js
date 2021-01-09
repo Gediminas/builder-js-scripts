@@ -1,4 +1,4 @@
-const git = require('../_tools/js/vc_git.js');
+const git = require('../_tools/js/git.js');
 
 (async function () {
   console.log('GIT CLONE OR UPDATE')
