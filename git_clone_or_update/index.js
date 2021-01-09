@@ -1,7 +1,7 @@
-const git = require('../_tools/js/git.js');
+const git_ex = require('../_tools/js/git_ex.js');
 
 (async function () {
   console.log('GIT CLONE OR UPDATE')
-  git.getclean('git@gitlab.com:gdsx/play_cpp.git', '_repo');
+  git_ex.getclean('git@gitlab.com:gdsx/play_cpp.git', '../_repo');
 })();
 
