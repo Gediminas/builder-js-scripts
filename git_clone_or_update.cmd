@@ -8,7 +8,7 @@ mkdir _working\git_clone_or_update
 mkdir _working\git_clone_or_update\%folder%
 
 pushd _working\git_clone_or_update\%folder%
-node ..\..\..\recipies\git_clone_or_update\index.js
+node ..\..\..\recipies\git_clone_or_update\index.js 2>&1 | tee main.log
 popd
 
 echo on
