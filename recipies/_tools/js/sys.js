@@ -1,6 +1,6 @@
 const child_process = require('child_process');
 
-const asleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const asleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const exec = (file, args, options) => {
   // if (options) {
