@@ -1,2 +1,2 @@
 #!/bin/bash
-./execute_task.sh git_get
+./execute_task.sh node git_get

@@ -1,2 +1,2 @@
 #!/bin/bash
-./execute_task.sh delay_long
+./execute_task.sh sh delay_long
