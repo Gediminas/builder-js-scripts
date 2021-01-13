@@ -1,29 +1,44 @@
+require('colors');
 const _path  = require('path');
 const _fs    = require('fs');
 const { exec } = require('./sys.js');
 
+// console.error = (args) => console.log(args.brightRed);
+// console.warn = (..message) => console.log(message.brightYellow),
+// console.info = (..message) => console.log(message.brightGreen),
+// console.debug = (..message) => console.log(message.magenta),
+
 exports.getclean_repo = (repo, dir, branch) => {
   console.log('* git_ex -> getclean_repo');
 
+
   const git_check_path = _path.resolve(dir + '/.git/refs/heads');
 
-  // const opts = {
-  //   stdio: 'inherit',
-  // };
-  const opts = {};
+  const opts = {
+    stdio : 'inherit',
+    stderr: 'inherit',
+  };
+  // const opts = {};
+
+  console.error('======    THIS IS ERROR    =======', opts);
+  console.warn('======    THIS IS WARN     =======');
+  console.debug('======    THIS IS DEBUG    =======');
+  console.info('======    THIS IS INFO      =======');
+  console.dir('======    THIS IS DIR      =======');
+  return true;
 
   if (_fs.existsSync(git_check_path)) {
-    console.log('Repo exists. Updating...');
+    console.warn('Repo exists. Updating...');
     opts.cwd = dir;
     exec('git', ['fetch', '--all'], opts);
     exec('git', ['reset', '--hard', `origin/${branch}`], opts);
     exec('git', ['clean', '-fdx'], opts);
     exec('git', ['pull'], opts);
   } else {
-    console.log('Repo does not exist. Cloning...');
+    console.warn('Repo does not exist. Cloning...');
     // FIXME: git clone sends progress to stderr
-    // exec('git', ['clone', '--progress', '--recursive', '-b', branch, repo, dir], opts);
-    exec('git', ['clone', '--quiet', '--recursive', '-b', branch, repo, dir], opts);
+    exec('git', ['clone', '--progress', '--recursive', '-b', branch, repo, dir], opts);
+    // exec('git', ['clone', '--quiet', '--recursive', '-b', branch, repo, dir], opts);
   }
   return true;
 };
