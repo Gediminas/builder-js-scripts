@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-product=$1
-sub=$(date +%F_%H-%M-%S)
-
-mkdir -p "_working/$product/$sub" && pushd "$_" || exit
-./../../../recipies/$product/recipe | tee main.log
-popd

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+DIRNAME="${BASH_SOURCE%[/\\]*}"
+ROOT=$(realpath "$DIRNAME/../")
+
+echo "Installing node.js modules to $ROOT"
+
+npm install colors --prefix "$ROOT"

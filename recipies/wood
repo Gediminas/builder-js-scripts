@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { asleep } = require('../_lib/js/sys.js');
+const { asleep } = require(`${__dirname}/include/js/sys.js`);
 
 (async () => {
   console.log('WOOD step 1/2');

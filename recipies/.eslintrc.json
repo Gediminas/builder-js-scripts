@@ -34,5 +34,6 @@
     "array-callback-return": 0,
     "linebreak-style": 0,
     "no-alert": 0
+    "import/no-dynamic-require": 0
   }
 }
