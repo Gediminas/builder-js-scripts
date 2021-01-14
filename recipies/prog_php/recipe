@@ -1,6 +1,6 @@
 #!/usr/bin/env php
 
 <?php
-  echo "Hello World!";
-  echo "PHP is so easy!";
+  echo "Hello World!\n";
+  echo "PHP is so easy!\n";
 ?>
