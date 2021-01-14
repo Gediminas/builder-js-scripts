@@ -1,10 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-interpreter=$1
-product=$2
+product=$1
 sub=$(date +%F_%H-%M-%S)
 
 mkdir -p "_working/$product/$sub" && pushd "$_" || exit
-file=$(find "./../../../recipies/$product/" -name "index.*")
-$interpreter "$file" | tee main.log
+./../../../recipies/$product/recipe | tee main.log
 popd

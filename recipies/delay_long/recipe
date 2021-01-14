@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const { asleep } = require('../_lib/js/sys.js');
 
 (async () => {
