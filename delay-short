@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { asleep } = require(`${__dirname}/include/js/sys.js`);
+const { asleep } = require(`${__dirname}/include/node/sys.js`);
 
 (async () => {
   console.log('SHORT step 1/5');

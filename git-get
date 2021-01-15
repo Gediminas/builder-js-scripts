@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+
+const _core = require('./include/node/core.js');
+const _git_ex = require('./include/node/git_ex.js');
+
+const temp = _core.get_temp('git-get');
+console.warn('temp:', temp);
+
+console.log('GIT CLONE OR UPDATE')
+_git_ex.getclean('git@gitlab.com:gdsx/play_cpp.git', `${temp}/../_repo`);
