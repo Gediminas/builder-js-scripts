@@ -7,7 +7,6 @@ const get_temp = (script) => {
   return temp;
 };
 
-
 module.exports = {
   get_temp,
 };
