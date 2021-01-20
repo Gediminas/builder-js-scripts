@@ -1,3 +1,4 @@
 #!/usr/bin/env sh
 
-./build wood release
+DIRNAME="${BASH_SOURCE%[/\\]*}"
+"$DIRNAME/build" wood release

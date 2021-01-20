@@ -1,3 +1,4 @@
 #!/usr/bin/env sh
 
-./build git-get
+DIRNAME="${BASH_SOURCE%[/\\]*}"
+"$DIRNAME/build" git-get

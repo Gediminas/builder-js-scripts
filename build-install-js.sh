@@ -1,3 +1,4 @@
 #!/usr/bin/env sh
 
-./build install-js
+DIRNAME="${BASH_SOURCE%[/\\]*}"
+"$DIRNAME/build" install-js

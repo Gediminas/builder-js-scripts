@@ -1,3 +1,4 @@
 #!/usr/bin/env sh
 
-./build delay-short
+DIRNAME="${BASH_SOURCE%[/\\]*}"
+"$DIRNAME/build" delay-short
