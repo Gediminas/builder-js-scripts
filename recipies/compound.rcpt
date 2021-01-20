@@ -10,7 +10,7 @@ echo "COMPOUND: DIRNAME = $DIRNAME"
 #source "$DIRNAME/include/bash.sh"
 #init
 
-"$DIRNAME/delay-short"
-"$DIRNAME/delay-long"
+"$DIRNAME/delay-short.rcpt"
+"$DIRNAME/delay-long.rcpt"
 
 echo "COMPOUND: [DONE]"
