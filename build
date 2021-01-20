@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo "BUILD: [START]"
+
 if [ -z "$1" ]; then
     echo "Usage: build some-product"
     exit 1
@@ -14,17 +16,17 @@ mkdir -p "$tmp"
 # tmp=$(realpath --no-symlinks "$tmp")
 #log="$tmp/main.log"
 
-echo "----------"
-echo "PROD: $exe"
-echo "TEMP: $tmp"
-#echo "LOG:  $log"
+echo "BUILD: PROD: $exe"
+echo "BUILD: TEMP: $tmp"
+#echo "BUILD: LOG:  $log"
 
 mkdir -p "$root/recipies" && pushd "$_" 1>/dev/null || exit
-echo "PWD:  $PWD"
-"$exe" "$tmp" | tee "$tmp/main.log"
+echo "BUILD: PWD = $PWD"
+  echo "----------"
+  "$exe" "$tmp" | tee "$tmp/main.log"
+  echo "----------"
 popd 1>/dev/null 2>&1
 
-echo "----------"
-echo "[DONE]"
-echo "Press ENTER to exit..."
+echo "BUILD: [DONE]"
+echo "BUILD: Press ENTER to exit..."
 read

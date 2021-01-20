@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+
+echo "COMPOUND: [START]"
+echo "COMPOUND: PWD = $PWD"
+
+DIRNAME="${BASH_SOURCE%[/\\]*}"
+echo "COMPOUND: PWD = $PWD"
+echo "COMPOUND: DIRNAME = $DIRNAME"
+
+#source "$DIRNAME/include/bash.sh"
+#init
+
+"$DIRNAME/delay-short"
+"$DIRNAME/delay-long"
+
+echo "COMPOUND: [DONE]"
