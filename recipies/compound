@@ -9,5 +9,10 @@ echo "========================="
 #source "$DIRNAME/include/bash.sh"
 
 #init
-"$DIRNAME/delay-short"
-"$DIRNAME/delay-long"
+# "$DIRNAME/delay-short"
+# "$DIRNAME/delay-long"
+
+echo $PWD
+
+./delay-short
+./delay-long
