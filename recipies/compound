@@ -3,11 +3,11 @@
 DIRNAME="${BASH_SOURCE%[/\\]*}"
 
 echo "========================="
-echo DIRNAME=$DIRNAME
+echo "DIRNAME=$DIRNAME"
 echo "========================="
 
-# source $DIRNAME/_lib/include.sh"
+#source "$DIRNAME/include/bash.sh"
 
-init
+#init
 "$DIRNAME/delay-short"
 "$DIRNAME/delay-long"
