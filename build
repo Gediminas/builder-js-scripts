@@ -13,12 +13,9 @@ root=$(dirname "$root")
 exe=$(realpath --no-symlinks "$root/recipies/$product.rcpt")
 tmp="$root/_working/$product/$(date +%F_%H-%M-%S)"
 mkdir -p "$tmp"
-# tmp=$(realpath --no-symlinks "$tmp")
-#log="$tmp/main.log"
 
 echo "BUILD: PROD: $exe"
 echo "BUILD: TEMP: $tmp"
-#echo "BUILD: LOG:  $log"
 
 mkdir -p "$tmp" && pushd "$_" 1>/dev/null || exit
 echo "BUILD: PWD = $PWD"
