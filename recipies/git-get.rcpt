@@ -3,4 +3,4 @@
 const _git_ex = require('./include/node/git_ex.js');
 
 console.log('GIT CLONE OR UPDATE')
-_git_ex.getclean('git@gitlab.com:gdsx/play_cpp.git', `../_repo`);
+_git_ex.getclean('git@vilkas:web_manager.git', `../_repo`);

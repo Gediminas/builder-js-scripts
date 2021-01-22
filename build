@@ -21,7 +21,14 @@ echo "BUILD: TEMP: $tmp"
 mkdir -p "$tmp" && pushd "$_" 1>/dev/null || exit
 echo "BUILD: PWD = $PWD"
   echo "----------"
-  "$exe" | "$predate" | tee "$tmp/main_tty.log"
+
+  # "$exe" |  "$predate" 2>&1 | tee "$tmp/main_tty.log"
+  # "$exe" |& "$predate" |& tee "$tmp/main_tty.log"
+  # "$exe" |& "$predate" |& tee "$root/aaa.log"
+  # "$exe" |& awk '{ print strftime("[%Y-%m-%d %H:%M:%S]"), $0; fflush(); }' |& tee "$root/aaa.log"
+
+  "$exe" |& tee "$root/aaa.log1" |& "$predate" |& tee "$root/aaa.log"
+
   echo "----------"
 popd 1>/dev/null 2>&1
 
