@@ -27,7 +27,7 @@ echo "BUILD: PWD = $PWD"
   # "$exe" |& "$predate" |& tee "$root/aaa.log"
   # "$exe" |& awk '{ print strftime("[%Y-%m-%d %H:%M:%S]"), $0; fflush(); }' |& tee "$root/aaa.log"
 
-  "$exe" |& tee "$root/aaa.log"
+  "$exe" |& tee "$root/_a_test.log"
 
   echo "----------"
 popd 1>/dev/null 2>&1

@@ -6,3 +6,4 @@ ROOT=$(realpath "$DIRNAME/../")
 echo "Installing node.js modules to $ROOT"
 
 npm install colors --prefix "$ROOT"
+npm install moment --prefix "$ROOT"

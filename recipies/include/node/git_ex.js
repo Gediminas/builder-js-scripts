@@ -1,12 +1,10 @@
-require('colors');
 const _path  = require('path');
 const _fs    = require('fs');
 const { exec } = require('./sys.js');
 
-// console.error = (args) => console.log(args.brightRed);
-// console.warn = (..message) => console.log(message.brightYellow),
-// console.info = (..message) => console.log(message.brightGreen),
-// console.debug = (..message) => console.log(message.magenta),
+const _log = require('./log.js');
+
+_log.start();
 
 exports.getclean_repo = (repo, dir, branch) => {
   console.log('* git_ex -> getclean_repo');
