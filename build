@@ -8,11 +8,20 @@ if [ -z "$1" ]; then
 fi
 
 product=$1
+debug=$2
 root=$(realpath --no-symlinks "${BASH_SOURCE[0]}")
 root=$(dirname "$root")
 exe=$(realpath --no-symlinks "$root/recipies/$product.rcpt")
 predate=$(realpath --no-symlinks "$root/bin/predate.sh")
-tmp="$root/_working/$product/$(date '+%Y-%m-%d_%H-%M-%S')"
+
+if [ $debug == 'debug' ]; then
+  tmp="$root/_working/$product/DEBUG"
+  rm -fdr "$tmp/_repo"
+else
+  tmp="$root/_working/$product/$(date '+%Y-%m-%d_%H-%M-%S')"
+fi
+
+
 mkdir -p "$tmp"
 
 echo "BUILD: PROD: $exe"
@@ -21,17 +30,12 @@ echo "BUILD: TEMP: $tmp"
 mkdir -p "$tmp" && pushd "$_" 1>/dev/null || exit
 echo "BUILD: PWD = $PWD"
   echo "----------"
-
-  # "$exe" |  "$predate" 2>&1 | tee "$tmp/main_tty.log"
-  # "$exe" |& "$predate" |& tee "$tmp/main_tty.log"
-  # "$exe" |& "$predate" |& tee "$root/aaa.log"
-  # "$exe" |& awk '{ print strftime("[%Y-%m-%d %H:%M:%S]"), $0; fflush(); }' |& tee "$root/aaa.log"
-
-  "$exe" |& tee "$root/_a_test.log"
-
+  echo "[$(date '+%Y-%m-%d_%H-%M-%S')]" |& tee -i 0000.log
+  "$exe" |& tee -ai 0000.log
+  echo "[$(date '+%Y-%m-%d_%H-%M-%S')]" |& tee -ai 0000.log
   echo "----------"
 popd 1>/dev/null 2>&1
 
 echo "BUILD: [DONE]"
 echo "BUILD: Press ENTER to exit..."
-read
+#read
