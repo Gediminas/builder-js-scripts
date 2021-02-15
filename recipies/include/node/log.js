@@ -7,23 +7,32 @@ const get_date_time = () => moment().format('Y-MM-DD HH:mm:ss');
 
 const colorize = (args, color, prefix) => {
   const nargs = [];
-  nargs.push(get_date_time().grey);
-  for (const arg of args) {
-    if (typeof arg !== 'string') {
-      if (prefix) {
-        nargs.push(color(`${prefix}:`));
-        prefix = null;
-      }
-      nargs.push(color(arg));
-    } else {
-      if (prefix) {
-        nargs.push(color(`${prefix}: ${arg}`));
-        prefix = null;
-      } else {
-        nargs.push(color(arg));
-      }
-    }
+  nargs.push(get_date_time());
+  if (prefix) {
+    nargs.push(`${prefix}:`);
   }
+  // if (color) {
+  //   for (const arg of args) {
+  //     if (typeof arg !== 'string') {
+  //       if (prefix) {
+  //         nargs.push(color(`${prefix}:`));
+  //         prefix = null;
+  //       }
+  //       nargs.push(color(arg));
+  //     } else {
+  //       if (prefix) {
+  //         nargs.push(color(`${prefix}: ${arg}`));
+  //         prefix = null;
+  //       } else {
+  //         nargs.push(color(arg));
+  //       }
+  //     }
+  //   }
+  // } else {
+    for (const arg of args) {
+      nargs.push(arg);
+    }
+  // }
   return nargs;
 };
 
@@ -36,12 +45,13 @@ log.start = () => {
   const orig_log   = console.log;
   const orig_warn  = console.warn;
   const orig_error = console.error;
+  const orig_info  = console.info;
+  // const orig_dir   = console.dir;
   // const orig_debug = console.debug;
-  // const orig_info  = console.info;
 
 
   console.log = (...args) => {
-    const colored_args = colorize(args, colors.grey);
+    const colored_args = colorize(args);
     orig_log.apply(this, colored_args);
   };
 
@@ -59,6 +69,16 @@ log.start = () => {
     const colored_args = colorize(args, colors.bgRed, 'ERROR');
     orig_error.apply(this, colored_args);
   };
+
+  console.info = (...args) => {
+    const colored_args = colorize(args, colors.bgRed, 'ERROR');
+    orig_info.apply(this, colored_args);
+  };
+
+  // console.dir = (...args) => {
+  //   const colored_args = colorize(args, colors.bgRed, 'ERROR');
+  //   orig_dir.apply(this, colored_args);
+  // };
 
   console.note = (...args) => {
     const colored_args = colorize(args, colors.brightYellow);

@@ -22,7 +22,6 @@ exports.getclean_repo = (repo, dir, branch) => {
   console.warn('======    THIS IS WARN     =======');
   console.debug('======    THIS IS DEBUG    =======');
   console.info('======    THIS IS INFO      =======');
-  console.dir('======    THIS IS DIR      =======');
 
   if (_fs.existsSync(git_check_path)) {
     console.warn('Repo exists. Updating...');

@@ -15,7 +15,7 @@ exe=$(realpath --no-symlinks "$root/recipies/$product.rcpt")
 predate=$(realpath --no-symlinks "$root/bin/predate.sh")
 
 if [ $debug == 'debug' ]; then
-  tmp="$root/_working/$product/DEBUG"
+  tmp="$root/_working/$product/_DEBUG"
   rm -fdr "$tmp/_repo"
 else
   tmp="$root/_working/$product/$(date '+%Y-%m-%d_%H-%M-%S')"
@@ -29,11 +29,11 @@ echo "BUILD: TEMP: $tmp"
 
 mkdir -p "$tmp" && pushd "$_" 1>/dev/null || exit
 echo "BUILD: PWD = $PWD"
-  echo "----------"
-  echo "[$(date '+%Y-%m-%d_%H-%M-%S')]" |& tee -i 0000.log
+  echo "----------------------------------------"
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')]" |& tee -i 0000.log
   "$exe" |& tee -ai 0000.log
-  echo "[$(date '+%Y-%m-%d_%H-%M-%S')]" |& tee -ai 0000.log
-  echo "----------"
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')]" |& tee -ai 0000.log
+  echo "----------------------------------------"
 popd 1>/dev/null 2>&1
 
 echo "BUILD: [DONE]"
