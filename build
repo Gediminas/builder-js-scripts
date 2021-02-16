@@ -1,4 +1,14 @@
 #!/usr/bin/env bash
+function X {
+  while IFS=$'\r' read -n1 ch; do
+    if [ -z "$ch" ]; then
+      # [[ $ch = "\r*" ]] && echo "" || echo ""
+      echo ""
+    else
+      echo -n "$ch"
+    fi
+  done
+}
 
 echo "BUILD: [START]"
 
@@ -31,9 +41,22 @@ mkdir -p "$tmp" && pushd "$_" 1>/dev/null || exit
 echo "BUILD: PWD = $PWD"
   echo "----------------------------------------"
   echo "[$(date '+%Y-%m-%d %H:%M:%S')]" |& tee -i 0000.log
-  "$exe" |& tee -ai 0000.log
+  # "$exe" |& tee -ai 0000.log
+
+  # "$exe" |  "$predate" 2>&1 | tee "$tmp/main_tty.log"
+  # "$exe" |& "$predate" |& tee "$tmp/main_tty.log"
+  # "$exe" |& "$predate" |& tee "$root/aaa.log"
+  # "$exe" |& awk '{ print strftime("[%Y-%m-%d %H:%M:%S]"), $0; fflush(); }' |& tee "$root/aaa.log"
+
+
+  # "$exe" |& ts "%Y-%m-%d >" |& tee -ai 0000.log
+  # "$exe" |& while read -n1 line; do printf "%s" "${line}"; done
+  # stdbuf -o0 LongRunningCommand | stdbuf -o0 tr '\n' ,
+
+  "$exe" |& X |& ts "%Y-%m-%d %H:%M:%S" |& tee -ai 0000.log
+
   echo "[$(date '+%Y-%m-%d %H:%M:%S')]" |& tee -ai 0000.log
-  echo "----------------------------------------"
+  echo "----------"
 popd 1>/dev/null 2>&1
 
 echo "BUILD: [DONE]"
