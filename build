@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
-function X {
+DeR () {
   while IFS=$'\r' read -n1 ch; do
     if [ -z "$ch" ]; then
       # [[ $ch = "\r*" ]] && echo "" || echo ""
-      echo ""
+      echo -n ""
     else
       echo -n "$ch"
     fi
+  done
+}
+
+Teee () {
+  while  read -r line; do
+    echo "$(date '+%Y-%m-%d %H:%M:%S') $line" >> "$1"
+    echo "$line"
   done
 }
 
@@ -24,7 +31,7 @@ root=$(dirname "$root")
 exe=$(realpath --no-symlinks "$root/recipies/$product.rcpt")
 predate=$(realpath --no-symlinks "$root/bin/predate.sh")
 
-if [ $debug == 'debug' ]; then
+if [ "$debug" == "debug" ]; then
   tmp="$root/_working/$product/_DEBUG"
   rm -fdr "$tmp/_repo"
 else
@@ -53,7 +60,7 @@ echo "BUILD: PWD = $PWD"
   # "$exe" |& while read -n1 line; do printf "%s" "${line}"; done
   # stdbuf -o0 LongRunningCommand | stdbuf -o0 tr '\n' ,
 
-  "$exe" |& X |& ts "%Y-%m-%d %H:%M:%S" |& tee -ai 0000.log
+  "$exe" |& Teee 0000.log
 
   echo "[$(date '+%Y-%m-%d %H:%M:%S')]" |& tee -ai 0000.log
   echo "----------"
