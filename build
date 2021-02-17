@@ -38,7 +38,7 @@ root=$(dirname "$root")
 exe=$(realpath --no-symlinks "$root/recipies/$product.rcpt")
 predate=$(realpath --no-symlinks "$root/bin/predate.sh")
 
-if [ $debug == 'debug' ]; then
+if [ "$debug" == "debug" ]; then
   tmp="$root/_working/$product/_DEBUG"
   rm -fdr "$tmp/_repo"
 else
