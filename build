@@ -4,7 +4,7 @@
 # FUNCTIONS
 
 split_cr () {
-  while IFS=$'\r' read -n1 ch; do
+  while IFS=$'\r' read -r -n1 ch; do
     if [ -z "$ch" ]; then
       # [[ $ch = "\r*" ]] && echo "" || echo ""
       echo ""
@@ -17,7 +17,7 @@ split_cr () {
 tee_time () {
   while read -r line; do
     echo "$line"
-    echo -e "$(date '+%Y-%m-%d %H:%M:%S')\t$line" >> $1
+    echo -e "$(date '+%Y-%m-%d %H:%M:%S')\t$line" >> "$1"
   done
 }
 
@@ -36,7 +36,6 @@ debug=$2
 root=$(realpath --no-symlinks "${BASH_SOURCE[0]}")
 root=$(dirname "$root")
 exe=$(realpath --no-symlinks "$root/recipies/$product.rcpt")
-predate=$(realpath --no-symlinks "$root/bin/predate.sh")
 
 if [ "$debug" == "debug" ]; then
   tmp="$root/_working/$product/_DEBUG"
