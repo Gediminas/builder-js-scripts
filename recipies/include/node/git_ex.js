@@ -2,9 +2,8 @@ const _path  = require('path');
 const _fs    = require('fs');
 const { exec } = require('./sys.js');
 
-const _log = require('./log.js');
-
-_log.start();
+// const _log = require('./log.js');
+// _log.start();
 
 exports.getclean_repo = (repo, dir, branch) => {
   console.log('* git_ex -> getclean_repo');
