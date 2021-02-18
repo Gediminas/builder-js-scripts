@@ -22,13 +22,13 @@ exports.GetClean = (repo, dir, branch) => {
     console.log('Repo exists. Updating...'.brightYellow);
     opts.cwd = dir;
     exec('git', ['fetch', '--all'], opts);
-    exec('git', ['reset', '--hard', `origin/${branch}`], opts);
+    exec('git', ['reset', '--hard', `origin/${resolved_branch}`], opts);
     exec('git', ['clean', '-fdx'], opts);
     exec('git', ['pull'], opts);
   }
   else {
     console.log('Repo does not exist. Cloning...'.brightYellow);
-    exec('git', ['clone', '--progress', '--recursive', '-b', branch, repo, dir], opts);
+    exec('git', ['clone', '--progress', '--recursive', '-b', resolved_branch, repo, dir], opts);
   }
 
   // console.log(`  :: result : ${ret}`);
