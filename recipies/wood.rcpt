@@ -1,11 +1,7 @@
 #!/usr/bin/env node
 
-const { asleep } = require(`${__dirname}/include/node/sys.js`);
+const _git = require('./include/node/git.js');
 
-(async () => {
-  console.log('WOOD step 1/2');
-  await asleep(500);
+console.log('# Make product'.brightCyan)
 
-  console.log('WOOD step 2/2');
-  await asleep(500);
-})();
+_git.GetClean('git@vilkas:MxKozijn.git', `../_repo`);
