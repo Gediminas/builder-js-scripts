@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+
+require('colors');
+const vcgit = require('./library/node/vcgit.js');
+
+console.log('# Make WebManager'.brightCyan)
+
+vcgit.GetClean('git@vilkas:web_manager.git', `../_repo`);

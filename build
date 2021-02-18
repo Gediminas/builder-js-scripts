@@ -29,8 +29,6 @@ teetime () {
 ##################################################
 # MAIN
 
-# echo "BUILD: [START]"
-
 if [ -z "$1" ]; then
     echo "Usage: build some-product"
     exit 1
@@ -49,9 +47,6 @@ else
   tmp="$root/_working/$product/$(date '+%Y-%m-%d_%H-%M-%S')"
 fi
 
-
-mkdir -p "$tmp"
-
 echo "----------------------------------------"
 echo "BUILD: PROD: $exe"
 echo "BUILD: TEMP: $tmp"
@@ -61,5 +56,3 @@ mkdir -p "$tmp" && pushd "$_" 1>/dev/null || exit
   "$exe" |& teetime 0000.log
   echo "----------------------------------------"
 popd 1>/dev/null 2>&1
-
-# echo "BUILD: [DONE]"

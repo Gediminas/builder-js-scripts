@@ -1,7 +1,0 @@
-#!/usr/bin/env node
-
-const _git_ex = require('./include/node/git_ex.js');
-
-
-console.log('GIT CLONE OR UPDATE')
-_git_ex.getclean('git@vilkas:web_manager.git', `../_repo`);

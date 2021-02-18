@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
-const _git = require('./include/node/git.js');
+require('colors');
+const vcgit = require('./library/node/vcgit.js');
 
-console.log('# Make product'.brightCyan)
+console.log('# Make Wood'.brightCyan)
 
-_git.GetClean('git@vilkas:MxKozijn.git', `../_repo`);
+vcgit.GetClean('git@vilkas:MxKozijn.git', `../_repo`);

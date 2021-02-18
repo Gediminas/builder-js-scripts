@@ -10,14 +10,13 @@ exports.GetClean = (repo, dir, branch) => {
 
   const resolved_dir    = _path.resolve(dir);
   const resolved_branch = (branch === undefined) ? 'master' : branch;
+  const git_check_path = _path.resolve(dir + '/.git/refs/heads');
+  const opts = {};
 
   console.log('Getting:'.magenta);
   console.log(`repo:   ${repo}`.magenta);
   console.log(`dest:   ${resolved_dir}`.magenta);
   console.log(`branch: ${resolved_branch}`.magenta);
-
-  const opts = {};
-  const git_check_path = _path.resolve(dir + '/.git/refs/heads');
 
   if (_fs.existsSync(git_check_path)) {
     console.log('Repo exists. Updating...'.brightYellow);
