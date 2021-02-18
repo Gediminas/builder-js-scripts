@@ -29,7 +29,7 @@ teetime () {
 ##################################################
 # MAIN
 
-echo "BUILD: [START]"
+# echo "BUILD: [START]"
 
 if [ -z "$1" ]; then
     echo "Usage: build some-product"
@@ -52,19 +52,14 @@ fi
 
 mkdir -p "$tmp"
 
+echo "----------------------------------------"
 echo "BUILD: PROD: $exe"
 echo "BUILD: TEMP: $tmp"
 
 mkdir -p "$tmp" && pushd "$_" 1>/dev/null || exit
-echo "BUILD: PWD = $PWD"
   echo "----------------------------------------"
-
   "$exe" |& teetime 0000.log
-
-  echo "DONE" |& teetime 0000.log
   echo "----------------------------------------"
 popd 1>/dev/null 2>&1
 
-echo "BUILD: [DONE]"
-echo "BUILD: Press ENTER to exit..."
-#read
+# echo "BUILD: [DONE]"
