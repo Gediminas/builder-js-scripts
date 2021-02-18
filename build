@@ -3,7 +3,7 @@
 ##################################################
 # FUNCTIONS
 
-split () {
+teetime () {
   buffer=
   while IFS= read -r -n1 ch; do
     case $ch in
@@ -25,24 +25,6 @@ split () {
     esac
   done
 }
-
-# split_cr () {
-#   while IFS=$'\r' read -r -n1 ch; do
-#     if [ -z "$ch" ]; then
-#       # [[ $ch = "\r*" ]] && echo "" || echo ""
-#       echo ""
-#     else
-#       echo -n "$ch"
-#     fi
-#   done
-# }
-
-# tee_time () {
-#   while read -r line; do
-#     echo "$line"
-#     echo -e "$(date '+%Y-%m-%d %H:%M:%S')\t$line" >> "$1"
-#   done
-# }
 
 ##################################################
 # MAIN
@@ -76,16 +58,11 @@ echo "BUILD: TEMP: $tmp"
 mkdir -p "$tmp" && pushd "$_" 1>/dev/null || exit
 echo "BUILD: PWD = $PWD"
   echo "----------------------------------------"
-  echo -e "$(date '+%Y-%m-%d %H:%M:%S')\tSTART" |& tee -i 0000.log
 
-  # "$exe" |& split_cr |& tee -ai 0000.log
-  # "$exe" |& split_cr |& ts "%Y-%m-%d %H:%M:%S" |& tee -ai 0000.log
+  "$exe" |& teetime 0000.log
 
-  # "$exe" |& split_cr |& tee_time 0000.log
-  "$exe" |& split 0000.log
-
-  echo -e "$(date '+%Y-%m-%d %H:%M:%S')\tDONE" |& tee -ai 0000.log
-  echo "----------"
+  echo "DONE" |& teetime 0000.log
+  echo "----------------------------------------"
 popd 1>/dev/null 2>&1
 
 echo "BUILD: [DONE]"
