@@ -1,22 +1,23 @@
 #!/usr/bin/env bash
 
-function goto {
-    label=$1
-    cmd=$(sed -n "/$label:/{:a;n;p;ba};" $0 | grep -v ':$')
-    eval "$cmd"
-    exit
-}
+# function goto {
+#     label=$1
+#     cmd=$(sed -n "/$label:/{:a;n;p;ba};" $0 | grep -v ':$')
+#     eval "$cmd"
+#     exit
+# }
+# goto skip
+
 ##########################################################
 # // REPO GET/PREP/BUILD
 
-goto skip
 
 # > REM Git clone
 # > rd /S /Q wm
 # > git clone 'git@vilkas:web_manager.git' './wm'
 
 echo -e "\e[33m# CLONE\e[0m"
-git clone git@vilkas:web_manager.git ../repo
+# git clone git@vilkas:web_manager.git ../repo
 
 temp=$PWD
 cd ../repo || exit
@@ -30,14 +31,17 @@ echo -e "\e[35m* ROOT = $root\e[0m"
 # > npm install
 
 echo -e "\e[33m# INSTALL\e[0m"
-npm install
+# npm install
 
 # > REM Build
 # > cd wm
 # > sh build.sh
 
 echo -e "\e[33m# BUILD\e[0m"
-source build.sh
+# source build.sh
+
+#skip:
+echo -e "\e[101m# SKIP\e[0m"
 
 # // COLLECT and MAKE LITE
 
@@ -48,11 +52,18 @@ source build.sh
 # DirCopy('@root@/wm/dist/prebuilds',       '@temp@/dist/prebuilds')
 # Compress('@temp@/dist/*', '@temp@/dist_lite.7z')
 
-#skip:
-echo -e "\e[101m# SKIP\e[0m"
-
 echo -e "\e[33m# COLLECT and MAKE LITE\e[0m"
-cp "dist/WebManager.exe" "$temp/dist/WebManager.exe"
+mkdir -p "$temp/dist"
+
+# cp -avr dist "$temp/dist"
+# find . -name '*.sh' | cpio -pdm "$temp/dist"
+# find . -name '*.sh'
+# find ./dist -name '*.sh' | xargs -i cp -rv --parents {}
+cp -av  dist/WebManager.exe "$temp/dist"
+cp -Rav dist/*.sh           "$temp/dist/"
+cp -Rav dist/*.cmd          "$temp/dist/"
+cp -Rav dist/config         "$temp/dist/config/"
+cp -Rav dist/prebuilds      "$temp/dist/prebuilds"
 
 # // GET WOOD/PVC
 
