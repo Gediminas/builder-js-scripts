@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+
+function goto {
+    label=$1
+    cmd=$(sed -n "/$label:/{:a;n;p;ba};" $0 | grep -v ':$')
+    eval "$cmd"
+    exit
+}
+##########################################################
+# // REPO GET/PREP/BUILD
+
+goto skip
+
+# > REM Git clone
+# > rd /S /Q wm
+# > git clone 'git@vilkas:web_manager.git' './wm'
+
+echo -e "\e[33m# CLONE\e[0m"
+git clone git@vilkas:web_manager.git ../repo
+
+temp=$PWD
+cd ../repo || exit
+root=$PWD
+
+echo -e "\e[35m* TEMP = $temp\e[0m"
+echo -e "\e[35m* ROOT = $root\e[0m"
+
+# > REM npm-install
+# > cd wm
+# > npm install
+
+echo -e "\e[33m# INSTALL\e[0m"
+npm install
+
+# > REM Build
+# > cd wm
+# > sh build.sh
+
+echo -e "\e[33m# BUILD\e[0m"
+source build.sh
+
+# // COLLECT and MAKE LITE
+
+# FileCopy('@root@/wm/dist/WebManager.exe', '@temp@/dist/WebManager.exe')
+# DirCopy('@root@/wm/dist',                 '@temp@/dist',        '*.sh')
+# DirCopy('@root@/wm/dist',                 '@temp@/dist',        '*.cmd')
+# DirCopy('@root@/wm/dist/config',          '@temp@/dist/config')
+# DirCopy('@root@/wm/dist/prebuilds',       '@temp@/dist/prebuilds')
+# Compress('@temp@/dist/*', '@temp@/dist_lite.7z')
+
+#skip:
+echo -e "\e[101m# SKIP\e[0m"
+
+echo -e "\e[33m# COLLECT and MAKE LITE\e[0m"
+cp "dist/WebManager.exe" "$temp/dist/WebManager.exe"
+
+# // GET WOOD/PVC
+
+# Decompress('e:\ftp\Builds\W40\Release\MxKozijn_Latest_.7z', '@temp@/dist/app/Wood')
+# Decompress('e:\ftp\Builds\P40\Release\MxKozijn_Latest_.7z', '@temp@/dist/app/PVC')
+
+# // TESTING
+
+# > REM npm-test
+# > cd wm
+# > mklink /J "app" "@temp@\dist\app"
+# > npm test > @temp@\test.log
+
+# FileCopy('@root@\wm\_testing\log.html', '@temp@\WebManager.html')
+# FileCopy('@root@\wm\_testing\log.html', 'd:\mx\builder\www\WebManager.html')
+
+# > REM ~Client test Log
+# > cat @temp@\test.log
+
+# > REM ~Server Log
+# > cat @root@\wm\_testing\log.html
+
+# ~PHP('@root@\wm\test\autotester_save_results.php', '@temp@\test.log', '@timestamp@', '@ATDB@', '@bcomment@')
+
+# // MAKE FULL
+
+# > REM Clean-up - distribution
+# > rd /S /Q @temp@\dist\app\PVC\map
+# > rd /S /Q @temp@\dist\app\Wood\map
+# Compress('@temp@/dist/*', '@temp@/dist.7z')
+
+# FileCopy('@temp@/dist_lite.7z', 'e:\ftp\Builds\WebManager\Lite\WebManager_@timestamp@_@hash@_lite.7z')
+# FileCopy('@temp@/dist.7z',      'e:\ftp\Builds\WebManager\WebManager_@timestamp@_@hash@.7z')
+
+# // CLEAN
+
+# > REM Clean-up - temp
+# > del '@temp@\dist.7z'
+# > del '@temp@\dist_lite.7z'
+# > rd /S /Q @temp@/dist
+
+# > REM Clean-up - root
+# > rd /S /Q wm

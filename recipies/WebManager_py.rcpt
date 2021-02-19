@@ -1,0 +1,76 @@
+#!/usr/bin/env python
+
+import subprocess
+
+sh_npm_install = """
+for x in 1 2 3 ; do echo $x ; sleep 1 ; done
+"""
+subprocess.call(['sh', '-c', sh_npm_install])
+
+
+
+# // REPO GET/PREP/BUILD
+
+# > REM Git clone
+# > rd /S /Q wm
+# > git clone 'git@vilkas:web_manager.git' './wm'
+
+# > REM npm-install
+# > cd wm
+# > npm install
+
+# > REM Build
+# > cd wm
+# > sh build.sh
+
+# // COLLECT and MAKE LITE
+
+# FileCopy('@root@/wm/dist/WebManager.exe', '@temp@/dist/WebManager.exe')
+# DirCopy('@root@/wm/dist',                 '@temp@/dist',        '*.sh')
+# DirCopy('@root@/wm/dist',                 '@temp@/dist',        '*.cmd')
+# DirCopy('@root@/wm/dist/config',          '@temp@/dist/config')
+# DirCopy('@root@/wm/dist/prebuilds',       '@temp@/dist/prebuilds')
+# Compress('@temp@/dist/*', '@temp@/dist_lite.7z')
+
+# // GET WOOD/PVC
+
+# Decompress('e:\ftp\Builds\W40\Release\MxKozijn_Latest_.7z', '@temp@/dist/app/Wood')
+# Decompress('e:\ftp\Builds\P40\Release\MxKozijn_Latest_.7z', '@temp@/dist/app/PVC')
+
+# // TESTING
+
+# > REM npm-test
+# > cd wm
+# > mklink /J "app" "@temp@\dist\app"
+# > npm test > @temp@\test.log
+
+# FileCopy('@root@\wm\_testing\log.html', '@temp@\WebManager.html')
+# FileCopy('@root@\wm\_testing\log.html', 'd:\mx\builder\www\WebManager.html')
+
+# > REM ~Client test Log
+# > cat @temp@\test.log
+
+# > REM ~Server Log
+# > cat @root@\wm\_testing\log.html
+
+# ~PHP('@root@\wm\test\autotester_save_results.php', '@temp@\test.log', '@timestamp@', '@ATDB@', '@bcomment@')
+
+# // MAKE FULL
+
+# > REM Clean-up - distribution
+# > rd /S /Q @temp@\dist\app\PVC\map
+# > rd /S /Q @temp@\dist\app\Wood\map
+# Compress('@temp@/dist/*', '@temp@/dist.7z')
+
+# FileCopy('@temp@/dist_lite.7z', 'e:\ftp\Builds\WebManager\Lite\WebManager_@timestamp@_@hash@_lite.7z')
+# FileCopy('@temp@/dist.7z',      'e:\ftp\Builds\WebManager\WebManager_@timestamp@_@hash@.7z')
+
+# // CLEAN
+
+# > REM Clean-up - temp
+# > del '@temp@\dist.7z'
+# > del '@temp@\dist_lite.7z'
+# > rd /S /Q @temp@/dist
+
+# > REM Clean-up - root
+# > rd /S /Q wm

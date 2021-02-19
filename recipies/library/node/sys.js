@@ -10,7 +10,7 @@ const exec = (file, args, options) => {
   // }
 
   try {
-    console.log('>>', file, args.join(' '));
+    console.log('>', file, args.join(' '));
     child_process.execFileSync(file, args, options);
     return true;
   } catch (e) {
