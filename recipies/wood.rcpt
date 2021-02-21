@@ -1,8 +1,197 @@
-#!/usr/bin/env node
+#!/usr/bin/env bash
 
-require('colors');
-const vcgit = require('./library/node/vcgit.js');
+# REPO GET/PREP/BUILD
 
-console.log('# Make Wood'.brightCyan)
+temp=$PWD
+mkdir -p ../repo && cd "$_" 1>/dev/null || exit
+root=$PWD
+echo -e "\e[35m* TEMP = $temp\e[0m"
+echo -e "\e[35m* ROOT = $root\e[0m"
 
-vcgit.GetClean('git@vilkas:MxKozijn.git', `../_repo`);
+#################################################
+# if (false); then                     # SKIP START
+#   echo -n ""
+#################################################
+
+echo -e "\e[33m# CLONE\e[0m"
+git clone --depth=1 git@vilkas:MxKozijn.git .
+# source ./get_submodules.sh --deprh=1 --clean --quiet
+
+#################################################
+# fi                                     # SKIP END
+#################################################
+
+git rev-parse --short HEAD
+
+mkdir -p "$temp/distr"
+# git log -1000 --no-merges --date=iso --pretty=format:"%%H | %%ad | %%an | %%s" | tee "$temp/distr/git.log"
+git log -1000 --no-merges --date=iso | tee "$temp/distr/git.log"
+# FileCopy('@temp@/git.log', '@client_data@/git_log/@timestamp@_git.log')
+
+# //---------- BUILD ---------------------
+
+BuildCMake() {
+    build_cfg_file="$1"
+    generator="$2"
+    architecture="$3"
+
+    echo "================="
+    echo "build_cfg_file = $build_cfg_file"
+    echo "generator = $generator"
+    echo "architecture = $architecture"
+
+    echo ""
+    echo "$PWD"
+    $curdir = $PWD
+
+    build_cfg_file="build/wood.cfg"
+    build_list="Builder/local/temp/cmake_paths.txt";
+    php Builder/local/CMake/scripts/php/collect_cmake_files.php $build_cfg_file $build_list
+    # while read -r generate_path || [[ -n $generate_path ]]; do
+    while IFS=$'\r\n' read -r generate_path || [[ -n $generate_path ]]; do
+        cd "$generate_path" || continue
+
+		echo "Generating in $generate_path";
+
+		# $cmakecommand = "$rootdir/Builder/local/CMake/bin/cmake";
+		# $cmakecommand = $cmakecommand." \"$generate_path\" -G \"$generator\" -A \"$architecture\"";
+		# $output = exec("$cmakecommand");
+		# $pos = strpos($output, "CMakeOutput.log");
+		# if( $pos !== false) {
+		# 	_log_error("There were errors generating in $generate_path.");
+		# }
+		# else {
+		# 	_log_to($command_log, "$output");
+		# }
+
+		# $cmake_clean_command = "$rootdir/Builder/local/CMake/bin/cmake -Dgeneration_path=";
+		# $cmake_clean_command = $cmake_clean_command."$generate_path -P $rootdir/Builder/local/CMake/scripts/cmake/clean_cmake.cmake";
+		# exec($cmake_clean_command);
+
+    done <$build_list
+
+    cd $curdir
+}
+
+
+BuildCMake build/wood.cfg "Visual Studio 16 2019" Win32
+
+# BuildCMake('build/_libraries.cfg', 'Visual Studio 16 2019', 'Win32', '@root@')
+# BuildCMake('build/utils.cfg', 'Visual Studio 16 2019', 'Win32', '@root@')
+
+# PHP('@root@/Language/bin/CompileMo.php', '@root@\Language\EN');
+# PHP('@root@/Language/bin/CompileMo.php', '@root@\Language\NL');
+# PHP('@root@/Language/bin/CompileMo.php', '@root@/Wood/www_desktop/locale/en_EN/LC_MESSAGES')
+# PHP('@root@/Language/bin/CompileMo.php', '@root@/Wood/www_desktop/locale/nl_NL/LC_MESSAGES')
+# >unlink '@root@/Wood/www_desktop/locale/nl_NL/LC_MESSAGES/pvc_www.po'
+# >unlink '@root@/Wood/www_desktop/locale/en_EN/LC_MESSAGES/pvc_www.po'
+
+# SetEnv('ide_vc19')
+# BuildCfg('build\_wx.cfg',        'DLL Release')
+# BuildCfg('build\_libraries.cfg', 'Release')
+# BuildCfg('build\wood.cfg',       'Release')
+# BuildCfg('build\utils.cfg',      'Release')
+
+#  SetTTL('1600')
+# //---------- js files minimization ------
+# > cd Wood
+# > rd /s /q PVCbin
+# > cmd /c git clone git@vilkas:PVCbin.git
+# > cd PVCbin
+# > cd www_desktop_pack
+# > pack.bat
+# > cd ..
+# > cd ..
+# > cd ..
+
+# //---------- COLLECT DISTRIBUTION ------
+
+# DirCopy('@root@/Libraries/wx/lib/vc_dll',          '@root@/bin',          '*.dll')
+# DirCopy('@root@/Libraries/Stingray/lib',           '@root@/bin',          '*.dll')
+# DirCopy('@root@/Libraries/CGAL/auxiliary/gmp/lib', '@root@/bin',          '*.dll')
+# DirCopy('@root@/bin',                              '@temp@/distr/bin',    '*.dll')
+# DirCopy('@root@/bin',                              '@temp@/distr/bin',    '*.exe')
+# DirCopy('@root@/bin',                              '@temp@/distr/bin',    '*.pak')
+# DirCopy('@root@/bin',                              '@temp@/distr/bin',    '*.bin')
+# DirCopy('@root@/bin',                              '@temp@/distr/bin',    '*.dat')
+# DirCopy('@root@/bin',                              '@temp@/distr/bin',    '*.manifest')
+# DirCopy('@root@/database',                         '@temp@/distr/database')
+# DirCopy('@root@/Language',                         '@temp@/distr/Language', '*.mo')
+# DirCopy('@root@/Wood/WEB',                         '@temp@/distr/Wood/WEB')
+# DirCopy('@root@/Wood/img',                         '@temp@/distr/Wood/img')
+# DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.ini')
+# DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.rgt')
+# DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.flt')
+# DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.dgt')
+# DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.mrp')
+# DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.xml')
+# DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.dxf')
+# DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.rtl')
+# DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.zip')
+# DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.dpe')
+# DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.dtl')
+# DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.txt')
+# //DirCopy('@root@/Wood/settings',                  '@temp@/distr/Wood/settings', '*.mxk')
+# //DirCopy('@root@/Wood/settings',                  '@temp@/distr/Wood/settings', '*.lib')
+# //DirCopy('@root@/Wood/settings',                  '@temp@/distr/Wood/settings', '*.wkv')
+# DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.bmp')
+# DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.reg')
+# DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.zipex')
+# DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.html')
+# DirCopy('@root@/Wood/www_desktop',                 '@temp@/distr/Wood/www_desktop')
+
+# FileCopy('@temp@/git.log',                        '@temp@/distr/git.log')
+
+# >unlink '@temp@/distr/Wood/www_desktop/debug_mode'
+
+# //---------- WEBMANAGER ------
+
+# > REM WebManager
+# > cd @root@/WebManager
+# > call npm install
+# > call sh build.sh
+
+# FileCopy('@root@/WebManager/bin/MatrixService.exe', '@temp@/distr/WebManager/bin/MatrixService.exe')
+# FileCopy('@root@/WebManager/dist/WebManager.exe',   '@temp@/distr/WebManager/WebManager.exe')
+# DirCopy('@root@/WebManager/dist',                   '@temp@/distr/WebManager',        '*.sh')
+# DirCopy('@root@/WebManager/dist',                   '@temp@/distr/WebManager',        '*.cmd')
+# DirCopy('@root@/WebManager/dist/config',            '@temp@/distr/WebManager/config')
+# DirCopy('@root@/WebManager/dist/prebuilds',         '@temp@/distr/WebManager/prebuilds')
+
+
+# //TEMP - Remove when #39781 is fixed
+# //FileCopy('@root@/WebManager/bin/MatrixService.exe', '@temp@/distr/WebManager/bin/nssm.exe')
+# //FileCopy('@root@/WebManager/bin/MatrixService.exe', '@root@/WebManager/bin/nssm.exe')
+
+
+# //---------- COPY MAP FILES TO DISTR ----------
+
+# > md "@temp@\distr\map"
+# PHP('@root@/Utils/copy_files_recursive.php', '@root@', '@temp@\distr\map', 'map')
+# PHP('@root@/Utils/copy_files_recursive.php', '@root@', '@temp@\distr\map', 'pdb')
+
+
+# //---------- GENERATE REPORTS ----------
+
+# PHP('@root@/Utils/BuildReports.php', '@root@/Wood/Reports/DXF/WKV/Result',      '@temp@/distr/Reports/WKV')
+# PHP('@root@/Utils/BuildReports.php', '@root@/Wood/Reports/DXF/WKV/Shapes',      '@temp@/distr/Reports/WKV')
+# PHP('@root@/Utils/BuildReports.php', '@root@/Wood/Reports/DXF/WKV/ShapeResult', '@temp@/distr/Reports/WKV')
+
+
+# //---------- CLEAN-UP, COMPRESS, PUT ON FTP----------
+
+# CheckDep('@temp@/distr/bin', 'MatrixKozijn.exe ShapeManager.exe MxK_Convert.exe MxKUserFileConverter.exe 7za.exe MxKDongle.dll SQLite2mdb.exe ExportDXFApp.exe MsSQLtoSqlite.exe')
+
+# CheckLng('@temp@/distr/Language', '@temp@/distr/bin')
+
+# UpdateVersionFromApp('@temp@/distr/bin', '@temp@/distr/bin/MatrixKozijn.exe', '1999-09-06')
+# > "@temp@/distr/bin/MatrixKozijn.exe" -i "e:\ftp\Builds\W40\Release\ProductName.txt"
+# > "@temp@/distr/bin/MatrixKozijn.exe" -c "e:\ftp\Builds\W40\Release\ProductCode.txt"
+
+# > rem Save build number to FTP
+# > echo @build_nr@>e:\ftp\Builds\W40\Release\build.txt
+
+# Compress('@temp@/distr/*', '@temp@/distr.7z')
+# FileCopy('@temp@/distr.7z', 'e:\ftp\Builds\W40\W40_b@build_nr@_@timestamp@_@hash@.7z')
+# FileCopy('@temp@/distr.7z', 'e:\ftp\Builds\W40\Release\MxKozijn_Latest_.7z')
+# RegDistr('ftp://builder.matrixlt.local/Builds/W40/W40_b@build_nr@_@timestamp@_@hash@.7z');
