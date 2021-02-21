@@ -1,4 +1,6 @@
 
+#!/usr/bin/env sh
+
 build_cfg_file="$1"
 generator="$2"
 architecture="$3"

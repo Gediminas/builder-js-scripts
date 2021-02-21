@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+build_cfg_file="$1"
+build_configs="$2"
+
+echo $build_cfg_file $build_configs

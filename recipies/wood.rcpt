@@ -30,10 +30,6 @@ $SCRIPTS/library/BuildCMake build/wood.cfg       "Visual Studio 16 2019" Win32
 $SCRIPTS/library/BuildCMake build/_libraries.cfg 'Visual Studio 16 2019' Win32
 $SCRIPTS/library/BuildCMake build/utils.cfg      'Visual Studio 16 2019' Win32
 
-#################################################
-fi                                     # SKIP END
-#################################################
-
 php Language/bin/CompileMo.php "Language\EN"
 php Language/bin/CompileMo.php "Language\NL"
 php Language/bin/CompileMo.php "Wood/www_desktop/locale/en_EN/LC_MESSAGES"
@@ -42,11 +38,16 @@ php Language/bin/CompileMo.php "Wood/www_desktop/locale/nl_NL/LC_MESSAGES"
 # unlink Wood/www_desktop/locale/en_EN/LC_MESSAGES/pvc_www.po
 
 
+#################################################
+fi                                     # SKIP END
+#################################################
+
+
 # SetEnv('ide_vc19')
-# BuildCfg('build\_wx.cfg',        'DLL Release')
-# BuildCfg('build\_libraries.cfg', 'Release')
-# BuildCfg('build\wood.cfg',       'Release')
-# BuildCfg('build\utils.cfg',      'Release')
+$SCRIPTS/library/BuildCfg build\_wx.cfg        DLL Release
+$SCRIPTS/library/BuildCfg build\_libraries.cfg Release
+$SCRIPTS/library/BuildCfg build\wood.cfg       Release
+$SCRIPTS/library/BuildCfg build\utils.cfg      Release
 
 #  SetTTL('1600')
 # //---------- js files minimization ------
