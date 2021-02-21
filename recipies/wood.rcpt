@@ -14,8 +14,8 @@ echo -e "\e[35m* ROOT = $root\e[0m"
 #################################################
 
 echo -e "\e[33m# CLONE\e[0m"
-git clone --depth=1 git@vilkas:MxKozijn.git .
-# source ./get_submodules.sh --deprh=1 --clean --quiet
+# git clone --depth=1 git@vilkas:MxKozijn.git .
+# sh ./get_submodules.sh --deprh=1 --clean --quiet
 
 #################################################
 # fi                                     # SKIP END
@@ -34,28 +34,29 @@ BuildCMake() {
     build_cfg_file="$1"
     generator="$2"
     architecture="$3"
+    repo=$PWD
+    collect_cmake="$repo/Builder/local/CMake/scripts/php/collect_cmake_files.php"
+    clean_cmake="$repo/Builder/local/CMake/scripts/cmake/clean_cmake.cmake"
+    build_list="$repo/Builder/local/temp/cmake_paths.txt"
+	# cmake="$repo/Builder/local/CMake/bin/cmake";
+	cmake=cmake
 
     echo "================="
     echo "build_cfg_file = $build_cfg_file"
     echo "generator = $generator"
     echo "architecture = $architecture"
+    echo "curdir = $curdir"
 
-    echo ""
-    echo "$PWD"
-    $curdir = $PWD
+    php "$collect_cmake" "$build_cfg_file" "$build_list"
 
-    build_cfg_file="build/wood.cfg"
-    build_list="Builder/local/temp/cmake_paths.txt";
-    php Builder/local/CMake/scripts/php/collect_cmake_files.php $build_cfg_file $build_list
-    # while read -r generate_path || [[ -n $generate_path ]]; do
     while IFS=$'\r\n' read -r generate_path || [[ -n $generate_path ]]; do
         cd "$generate_path" || continue
 
-		echo "Generating in $generate_path";
+		echo "Generating in $generate_path"
 
-		# $cmakecommand = "$rootdir/Builder/local/CMake/bin/cmake";
-		# $cmakecommand = $cmakecommand." \"$generate_path\" -G \"$generator\" -A \"$architecture\"";
-		# $output = exec("$cmakecommand");
+		output = $($cmake "$generate_path" -G "$generator" -A "$architecture";)
+
+        echo "$output"
 		# $pos = strpos($output, "CMakeOutput.log");
 		# if( $pos !== false) {
 		# 	_log_error("There were errors generating in $generate_path.");
@@ -64,13 +65,11 @@ BuildCMake() {
 		# 	_log_to($command_log, "$output");
 		# }
 
-		# $cmake_clean_command = "$rootdir/Builder/local/CMake/bin/cmake -Dgeneration_path=";
-		# $cmake_clean_command = $cmake_clean_command."$generate_path -P $rootdir/Builder/local/CMake/scripts/cmake/clean_cmake.cmake";
-		# exec($cmake_clean_command);
+		$cmake -Dgeneration_path="$generate_path" -P $clean_cmake
 
     done <$build_list
 
-    cd $curdir
+    cd $curdir || exit
 }
 
 
