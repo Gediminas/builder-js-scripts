@@ -40,52 +40,20 @@ cp -Rav dist/*.cmd          "$temp/dist/"
 cp -Rav dist/config         "$temp/dist/config/"
 cp -Rav dist/prebuilds      "$temp/dist/prebuilds"
 
+7z a -t7z -mx9 -mmt "$temp/dist_lite.7z" dist -y
+
+
+npm run test2 |& tee "$temp/test.log"
+
 #################################################
 fi                                     # SKIP END
 #################################################
 
-7z a -t7z -mx9 -mmt "$temp/dist_lite.7z" dist -y
+cp -av  _testing/log.html "$temp/WebManager.html"
+# cp -av  _testing/log.html "d:/mx/builder/www/WebManager.html"
+echo "URL: WebManager.html"
 
-
-# // GET WOOD/PVC
-
-# Decompress('e:\ftp\Builds\W40\Release\MxKozijn_Latest_.7z', '@temp@/dist/app/Wood')
-# Decompress('e:\ftp\Builds\P40\Release\MxKozijn_Latest_.7z', '@temp@/dist/app/PVC')
-
-# // TESTING
-
-# > REM npm-test
-# > cd wm
-# > mklink /J "app" "@temp@\dist\app"
-# > npm test > @temp@\test.log
-
-# FileCopy('@root@\wm\_testing\log.html', '@temp@\WebManager.html')
-# FileCopy('@root@\wm\_testing\log.html', 'd:\mx\builder\www\WebManager.html')
-
-# > REM ~Client test Log
-# > cat @temp@\test.log
-
-# > REM ~Server Log
-# > cat @root@\wm\_testing\log.html
-
-# ~PHP('@root@\wm\test\autotester_save_results.php', '@temp@\test.log', '@timestamp@', '@ATDB@', '@bcomment@')
-
-# // MAKE FULL
-
-# > REM Clean-up - distribution
-# > rd /S /Q @temp@\dist\app\PVC\map
-# > rd /S /Q @temp@\dist\app\Wood\map
-# Compress('@temp@/dist/*', '@temp@/dist.7z')
-
-# FileCopy('@temp@/dist_lite.7z', 'e:\ftp\Builds\WebManager\Lite\WebManager_@timestamp@_@hash@_lite.7z')
-# FileCopy('@temp@/dist.7z',      'e:\ftp\Builds\WebManager\WebManager_@timestamp@_@hash@.7z')
-
-# // CLEAN
-
-# > REM Clean-up - temp
-# > del '@temp@\dist.7z'
-# > del '@temp@\dist_lite.7z'
-# > rd /S /Q @temp@/dist
-
-# > REM Clean-up - root
-# > rd /S /Q wm
+timestamp="2020-02-21"
+ATDB="$temp/builder-AT.s3db";
+bcomment="User comment"
+php test/autotester_save_results.php "$temp/test.log" $timestamp $ATDB "$bcomment"
