@@ -1,35 +1,5 @@
 #!/usr/bin/env bash
 
-# REPO GET/PREP/BUILD
-
-temp=$PWD
-mkdir -p ../repo && cd "$_" 1>/dev/null || exit
-root=$PWD
-echo -e "\e[35m* TEMP = $temp\e[0m"
-echo -e "\e[35m* ROOT = $root\e[0m"
-
-#################################################
-# if (false); then                     # SKIP START
-#   echo -n ""
-#################################################
-
-echo -e "\e[33m# CLONE\e[0m"
-# git clone --depth=1 git@vilkas:MxKozijn.git .
-# sh ./get_submodules.sh --deprh=1 --clean --quiet
-
-#################################################
-# fi                                     # SKIP END
-#################################################
-
-git rev-parse --short HEAD
-
-mkdir -p "$temp/distr"
-# git log -1000 --no-merges --date=iso --pretty=format:"%%H | %%ad | %%an | %%s" | tee "$temp/distr/git.log"
-git log -1000 --no-merges --date=iso | tee "$temp/distr/git.log"
-# FileCopy('@temp@/git.log', '@client_data@/git_log/@timestamp@_git.log')
-
-# //---------- BUILD ---------------------
-
 BuildCMake() {
     build_cfg_file="$1"
     generator="$2"
@@ -38,8 +8,8 @@ BuildCMake() {
     collect_cmake="$repo/Builder/local/CMake/scripts/php/collect_cmake_files.php"
     clean_cmake="$repo/Builder/local/CMake/scripts/cmake/clean_cmake.cmake"
     build_list="$repo/Builder/local/temp/cmake_paths.txt"
-	# cmake="$repo/Builder/local/CMake/bin/cmake";
-	cmake=cmake
+	cmake="$repo/Builder/local/CMake/bin/cmake";
+	# cmake=cmake
 
     echo "================="
     echo "build_cfg_file = $build_cfg_file"
@@ -54,7 +24,7 @@ BuildCMake() {
 
 		echo "Generating in $generate_path"
 
-		output = $($cmake "$generate_path" -G "$generator" -A "$architecture";)
+		output=$($cmake "$generate_path" -G "$generator" -A "$architecture";)
 
         echo "$output"
 		# $pos = strpos($output, "CMakeOutput.log");
@@ -73,17 +43,47 @@ BuildCMake() {
 }
 
 
-BuildCMake build/wood.cfg "Visual Studio 16 2019" Win32
+# REPO GET/PREP/BUILD
 
-# BuildCMake('build/_libraries.cfg', 'Visual Studio 16 2019', 'Win32', '@root@')
-# BuildCMake('build/utils.cfg', 'Visual Studio 16 2019', 'Win32', '@root@')
+temp=$PWD
+mkdir -p ../_repo && cd "$_" 1>/dev/null || exit
+root=$PWD
+echo -e "\e[35m* TEMP = $temp\e[0m"
+echo -e "\e[35m* ROOT = $root\e[0m"
 
-# PHP('@root@/Language/bin/CompileMo.php', '@root@\Language\EN');
-# PHP('@root@/Language/bin/CompileMo.php', '@root@\Language\NL');
-# PHP('@root@/Language/bin/CompileMo.php', '@root@/Wood/www_desktop/locale/en_EN/LC_MESSAGES')
-# PHP('@root@/Language/bin/CompileMo.php', '@root@/Wood/www_desktop/locale/nl_NL/LC_MESSAGES')
-# >unlink '@root@/Wood/www_desktop/locale/nl_NL/LC_MESSAGES/pvc_www.po'
-# >unlink '@root@/Wood/www_desktop/locale/en_EN/LC_MESSAGES/pvc_www.po'
+#################################################
+# if (false); then                     # SKIP START
+#   echo -n ""
+#################################################
+
+echo -e "\e[33m# CLONE\e[0m"
+git clone --depth=1 git@vilkas:MxKozijn.git .
+sh ./get_submodules.sh --deprh=1 --clean --quiet
+
+git rev-parse --short HEAD
+
+mkdir -p "$temp/distr"
+# git log -1000 --no-merges --date=iso --pretty=format:"%%H | %%ad | %%an | %%s" | tee "$temp/distr/git.log"
+git log -1000 --no-merges --date=iso > "$temp/distr/git.log"
+# FileCopy('@temp@/git.log', '@client_data@/git_log/@timestamp@_git.log')
+
+# //---------- BUILD ---------------------
+
+BuildCMake build/wood.cfg       "Visual Studio 16 2019" Win32
+BuildCMake build/_libraries.cfg 'Visual Studio 16 2019' Win32
+BuildCMake build/utils.cfg      'Visual Studio 16 2019' Win32
+
+#################################################
+# fi                                     # SKIP END
+#################################################
+
+php Language/bin/CompileMo.php "Language\EN"
+php Language/bin/CompileMo.php "Language\NL"
+php Language/bin/CompileMo.php "Wood/www_desktop/locale/en_EN/LC_MESSAGES"
+php Language/bin/CompileMo.php "Wood/www_desktop/locale/nl_NL/LC_MESSAGES"
+unlink Wood/www_desktop/locale/nl_NL/LC_MESSAGES/pvc_www.po
+unlink Wood/www_desktop/locale/en_EN/LC_MESSAGES/pvc_www.po
+
 
 # SetEnv('ide_vc19')
 # BuildCfg('build\_wx.cfg',        'DLL Release')
