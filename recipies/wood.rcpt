@@ -26,18 +26,18 @@ git log -1000 --no-merges --date=iso > "$TEMP/distr/git.log"
 
 # //---------- BUILD ---------------------
 
-#################################################
-fi                                     # SKIP END
-#################################################
-
 $SCRIPTS/library/BuildCMake build/wood.cfg       "Visual Studio 16 2019" Win32
 $SCRIPTS/library/BuildCMake build/_libraries.cfg 'Visual Studio 16 2019' Win32
 $SCRIPTS/library/BuildCMake build/utils.cfg      'Visual Studio 16 2019' Win32
 
-# php Language/bin/CompileMo.php "Language\EN"
-# php Language/bin/CompileMo.php "Language\NL"
-# php Language/bin/CompileMo.php "Wood/www_desktop/locale/en_EN/LC_MESSAGES"
-# php Language/bin/CompileMo.php "Wood/www_desktop/locale/nl_NL/LC_MESSAGES"
+#################################################
+fi                                     # SKIP END
+#################################################
+
+php Language/bin/CompileMo.php "Language\EN"
+php Language/bin/CompileMo.php "Language\NL"
+php Language/bin/CompileMo.php "Wood/www_desktop/locale/en_EN/LC_MESSAGES"
+php Language/bin/CompileMo.php "Wood/www_desktop/locale/nl_NL/LC_MESSAGES"
 # unlink Wood/www_desktop/locale/nl_NL/LC_MESSAGES/pvc_www.po
 # unlink Wood/www_desktop/locale/en_EN/LC_MESSAGES/pvc_www.po
 
