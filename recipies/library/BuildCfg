@@ -2,5 +2,6 @@
 
 build_cfg_file="$1"
 build_configs="$2"
+platform="$3"
 
-echo $build_cfg_file $build_configs
+echo "\"$1\"  \"$2\"  \"$3\"  \"$4\""

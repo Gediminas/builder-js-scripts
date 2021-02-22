@@ -9,8 +9,8 @@ echo -e "\e[35m* SCRIPTS = $SCRIPTS\e[0m"
 echo -e "\e[35m* TEMP = $TEMP\e[0m"
 
 #################################################
-# if (false); then                     # SKIP START
-#   echo -n ""
+if (false); then                     # SKIP START
+  echo -n ""
 #################################################
 
 echo -e "\e[33m# CLONE\e[0m"
@@ -39,15 +39,32 @@ php Language/bin/CompileMo.php "Wood/www_desktop/locale/nl_NL/LC_MESSAGES"
 
 
 #################################################
-# fi                                     # SKIP END
+fi                                     # SKIP END
 #################################################
 
 
+function TTL() {
+    timeout 9 "$@"
+    case $? in
+        124)
+            echo "!!! ERROR: Process Timed Out!"
+            exit
+            ;;
+        0)
+            echo "OK"
+            ;;
+        *)
+            echo "ERROR: Exit code $?"
+            ;;
+    esac
+}
+
 # SetEnv('ide_vc19')
-"$SCRIPTS/library/BuildCfg ide_vc19 build\_wx.cfg"        DLL Release
-"$SCRIPTS/library/BuildCfg ide_vc19 build\_libraries.cfg" Release
-"$SCRIPTS/library/BuildCfg ide_vc19 build\wood.cfg"       Release
-"$SCRIPTS/library/BuildCfg ide_vc19 build\utils.cfg"      Release
+# TTL ping 8.8.8.8
+TTL "$SCRIPTS/library/BuildCfg" ide_vc19 build\_wx.cfg        "DLL Release" Win32
+TTL "$SCRIPTS/library/BuildCfg" ide_vc19 build\_libraries.cfg Release
+TTL "$SCRIPTS/library/BuildCfg" ide_vc19 build\wood.cfg       Release
+TTL "$SCRIPTS/library/BuildCfg" ide_vc19 build\utils.cfg      Release
 
 #  SetTTL('1600')
 # //---------- js files minimization ------
