@@ -9,13 +9,13 @@ echo -e "\e[35m* SCRIPTS = $SCRIPTS\e[0m"
 echo -e "\e[35m* TEMP = $TEMP\e[0m"
 
 #################################################
-if (false); then                     # SKIP START
-  echo -n ""
+# if (false); then                     # SKIP START
+#   echo -n ""
 #################################################
 
 echo -e "\e[33m# CLONE\e[0m"
 git clone --depth=1 git@vilkas:MxKozijn.git .
-sh ./get_submodules.sh --deprh=1 --clean --quiet
+sh ./get_submodules.sh --depth=1 --clean --quiet
 
 git rev-parse --short HEAD
 
@@ -26,9 +26,9 @@ git log -1000 --no-merges --date=iso > "$TEMP/distr/git.log"
 
 # //---------- BUILD ---------------------
 
-$SCRIPTS/library/BuildCMake build/wood.cfg       "Visual Studio 16 2019" Win32
-$SCRIPTS/library/BuildCMake build/_libraries.cfg 'Visual Studio 16 2019' Win32
-$SCRIPTS/library/BuildCMake build/utils.cfg      'Visual Studio 16 2019' Win32
+"$SCRIPTS/library/BuildCMake build/wood.cfg"       "Visual Studio 16 2019" Win32
+"$SCRIPTS/library/BuildCMake build/_libraries.cfg" 'Visual Studio 16 2019' Win32
+"$SCRIPTS/library/BuildCMake build/utils.cfg"      'Visual Studio 16 2019' Win32
 
 php Language/bin/CompileMo.php "Language\EN"
 php Language/bin/CompileMo.php "Language\NL"
@@ -39,15 +39,15 @@ php Language/bin/CompileMo.php "Wood/www_desktop/locale/nl_NL/LC_MESSAGES"
 
 
 #################################################
-fi                                     # SKIP END
+# fi                                     # SKIP END
 #################################################
 
 
 # SetEnv('ide_vc19')
-$SCRIPTS/library/BuildCfg build\_wx.cfg        DLL Release
-$SCRIPTS/library/BuildCfg build\_libraries.cfg Release
-$SCRIPTS/library/BuildCfg build\wood.cfg       Release
-$SCRIPTS/library/BuildCfg build\utils.cfg      Release
+"$SCRIPTS/library/BuildCfg ide_vc19 build\_wx.cfg"        DLL Release
+"$SCRIPTS/library/BuildCfg ide_vc19 build\_libraries.cfg" Release
+"$SCRIPTS/library/BuildCfg ide_vc19 build\wood.cfg"       Release
+"$SCRIPTS/library/BuildCfg ide_vc19 build\utils.cfg"      Release
 
 #  SetTTL('1600')
 # //---------- js files minimization ------
