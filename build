@@ -4,12 +4,12 @@ DIRNAME="${BASH_SOURCE%[/\\]*}"
 readarray -t errors   < "$DIRNAME/cfg/match_errors.txt"
 readarray -t warnings < "$DIRNAME/cfg/match_warnings.txt"
 
-for line in "${errors[@]}"; do
-	echo "E: $line"
+for  match in "${errors[@]}"; do
+	echo "E: {$match}"
 done
 
-for line in "${warnings[@]}"; do
-	echo "W: $line"
+for match in "${warnings[@]}"; do
+	echo "W: $match"
 done
 
 ##################################################
@@ -17,43 +17,46 @@ done
 
 decorate () {
 
+  # HEADER
   if [[ $1 =~ (^#\ ) ]]; then
      echo -ne "\e[93m"
      echo -n  "$1"
-     echo -e  "\e[0m"
+     echo -e  "\e[m"
      exit
   fi
+
+  # COMMAND
   if [[ $1 =~ (^>>\ ) ]]; then
-     echo -ne "\e[96m"
+     # echo -ne "\e[96m"
      echo -n  "$1"
-     echo -e  "\e[0m"
+     # echo -e  "\e[m"
      exit
   fi
-  if [[ $1 =~ (^ERROR:\ ) ]]; then
-     echo -ne "\e[7;49;91m!!! ERROR: "
-     echo -n  "$1"
-     echo -e  "\e[0m"
-     exit
-  fi
-  if [[ $1 =~ (^WARNING:\ ) ]]; then
-     echo -ne "\e[7;49;93m!!! WARNING: "
-     echo -n  "$1"
-     echo -e  "\e[0m"
-     exit
-  fi
-  if [[ $1 =~ "fatal error" ]]; then
-     echo -ne "\e[7;49;91m!!! ERROR: "
-     echo -n  "$1"
-     echo -e  "\e[0m"
-     exit
-  fi
-  if [[ $1 =~ (^.{4,10}lite error) ]]; then
-     echo -ne "\e[7;49;93m!!! WARNING: "
-     echo -n  "$1"
-     echo -e  "\e[0m"
-     exit
-  fi
-  echo "$1"
+
+  # WARNING
+  for match in "${errors[@]}"; do
+    if [[ $1 =~ $match ]]; then
+      echo -ne "\e[7;49;91m!!! [ERROR] "
+      echo -n  "$1"
+      echo -e  "\e[m"
+      exit
+    fi
+  done
+
+  # ERROR
+  for match in "${warnings[@]}"; do
+    if [[ $1 =~ $match ]]; then
+      echo -ne "\e[7;49;93m!!! [WARNING] "
+      echo -n  "$1"
+      echo -e  "\e[m"
+      exit
+    fi
+  done
+
+  # OTHER
+  echo -ne "\e[32m"
+  echo -n  "$1"
+  echo -e  "\e[m"
 }
 
 teetime () {
