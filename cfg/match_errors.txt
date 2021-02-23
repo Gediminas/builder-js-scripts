@@ -1,0 +1,3 @@
+(^ERROR:\ )
+"fatal error"
+(^.{4,10}lite error)

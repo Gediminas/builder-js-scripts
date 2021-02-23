@@ -1,0 +1,2 @@
+(^WARNING:\ )
+(^.{4,10}lite error)
