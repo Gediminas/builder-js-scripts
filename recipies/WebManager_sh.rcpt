@@ -1,37 +1,31 @@
 #!/usr/bin/env bash
 
-
 # REPO GET/PREP/BUILD
-echo -e "\e[33m# CLONE\e[0m"
-git clone git@vilkas:web_manager.git ../repo
+echo -e "# CLONE"
+echo ">> git clone git@vilkas:web_manager.git ../repo"
+git clone git@vilkas:web_manager.git ../repo --progress --recursive
 
 temp=$PWD
 cd ../repo || exit
 root=$PWD
 
-echo -e "\e[35m* TEMP = $temp\e[0m"
-echo -e "\e[35m* ROOT = $root\e[0m"
-
-
-#################################################
-if (false); then                     # SKIP START
-#################################################
+echo -e "* TEMP = $temp"
+echo -e "* ROOT = $root"
 
 # REPO PREP
-echo -e "\e[33m# INSTALL\e[0m"
+echo "# INSTALL"
+echo ">> npm install"
 npm install
 
 
 # REPO BUILD
-echo -e "\e[33m# BUILD\e[0m"
+echo "# BUILD"
+echo ">> source build.sh"
 source build.sh
-
-#skip:
-echo -e "\e[101m# SKIP\e[0m"
 
 # // COLLECT and MAKE LITE
 
-echo -e "\e[33m# COLLECT and MAKE LITE\e[0m"
+echo "# COLLECT and MAKE LITE"
 mkdir -p "$temp/dist"
 
 cp -av  dist/WebManager.exe "$temp/dist"
@@ -44,10 +38,6 @@ cp -Rav dist/prebuilds      "$temp/dist/prebuilds"
 
 
 npm run test2 |& tee "$temp/test.log"
-
-#################################################
-fi                                     # SKIP END
-#################################################
 
 cp -av  _testing/log.html "$temp/WebManager.html"
 # cp -av  _testing/log.html "d:/mx/builder/www/WebManager.html"

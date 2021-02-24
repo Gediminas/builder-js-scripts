@@ -9,11 +9,11 @@ echo -e "[DEBUG] SCRIPTS = $SCRIPTS\e[0m"
 echo -e "[DEBUG] TEMP = $TEMP\e[0m"
 
 echo -e "# CLONE"
-git clone --depth=1 git@vilkas:MxKozijn.git .
+git clone git@vilkas:MxKozijn.git . --progress --recursive --depth=1
 
 #################################################
-if (false); then                     # SKIP START
-  echo -n ""
+# if (false); then                     # SKIP START
+#   echo -n ""
 #################################################
 
 sh ./get_submodules.sh --depth=1 --clean --quiet
@@ -40,7 +40,7 @@ php Language/bin/CompileMo.php "Wood/www_desktop/locale/nl_NL/LC_MESSAGES"
 
 
 #################################################
-fi                                     # SKIP END
+# fi                                     # SKIP END
 #################################################
 
 

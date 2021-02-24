@@ -1,3 +1,6 @@
 ^WARNING:
 ^.{4,10}lite error
 highlight$
+PHP Warning:
+DB does not exist
+(npm WARN\ )
