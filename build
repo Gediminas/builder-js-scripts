@@ -4,59 +4,76 @@ DIRNAME="${BASH_SOURCE%[/\\]*}"
 readarray -t errors   < "$DIRNAME/cfg/match_errors.txt"
 readarray -t warnings < "$DIRNAME/cfg/match_warnings.txt"
 
-for  match in "${errors[@]}"; do
-	echo "E: {$match}"
-done
+# for  match in "${errors[@]}"; do
+# \	echo "E: {$match}"
+# done
 
-for match in "${warnings[@]}"; do
-	echo "W: $match"
-done
+# for match in "${warnings[@]}"; do
+# 	echo "W: $match"
+# done
 
 ##################################################
 # FUNCTIONS
 
 decorate () {
+  forlog=$2
 
   # HEADER
   if [[ $1 =~ (^#\ ) ]]; then
-     echo -ne "\e[93m"
-     echo -n  "$1"
-     echo -e  "\e[m"
+     [ "$forlog" ] && echo -ne "\e[93m" || echo -ne "# "
+     echo -n "$1"
+     [ "$forlog" ] && echo -e  "\e[m"
      exit
   fi
 
   # COMMAND
   if [[ $1 =~ (^>>\ ) ]]; then
-     # echo -ne "\e[96m"
-     echo -n  "$1"
-     # echo -e  "\e[m"
+     [ "$forlog" ] && echo -ne "\e[96m" || echo -ne "> "
+     echo -n "$1"
+     [ "$forlog" ] && echo -e  "\e[m"
      exit
   fi
 
-  # WARNING
-  for match in "${errors[@]}"; do
-    if [[ $1 =~ $match ]]; then
-      echo -ne "\e[7;49;91m!!! [ERROR] "
-      echo -n  "$1"
-      echo -e  "\e[m"
-      exit
-    fi
-  done
+  # DEBUG
+  if [[ $1 =~ (^\[DEBUG\]\ ) ]]; then
+     [ "$forlog" ] && echo -ne "\e[98m" || echo -ne "D "
+     echo -n "$1"
+     [ "$forlog" ] && echo -e  "\e[m"
+     exit
+  fi
+
+  # OK
+  if [[ $1 =~ (^\[OK\]\ ) ]]; then
+     [ "$forlog" ] && echo -ne "\e[42m" || echo -ne "V "
+     echo -n "$1"
+     [ "$forlog" ] && echo -e  "\e[m"
+     exit
+  fi
 
   # ERROR
   for match in "${warnings[@]}"; do
     if [[ $1 =~ $match ]]; then
-      echo -ne "\e[7;49;93m!!! [WARNING] "
-      echo -n  "$1"
-      echo -e  "\e[m"
+      [ "$forlog" ] && echo -ne "\e[7;49;93m[W] " || echo -ne "W "
+      echo -n "$1"
+      [ "$forlog" ] && echo -e  "\e[m"
+      exit
+    fi
+  done
+
+  # WARNING
+  for match in "${errors[@]}"; do
+    if [[ $1 =~ $match ]]; then
+      [ "$forlog" ] && echo -ne "\e[7;49;91m[E] " || echo -ne "E "
+      echo -n "$1"
+      [ "$forlog" ] && echo -e  "\e[m"
       exit
     fi
   done
 
   # OTHER
-  echo -ne "\e[32m"
-  echo -n  "$1"
-  echo -e  "\e[m"
+  [ "$forlog" ] && echo -ne "\e[32m" || echo -ne "< "
+  echo -n "$1"
+  [ "$forlog" ] && echo -e  "\e[m"
 }
 
 teetime () {
@@ -64,17 +81,19 @@ teetime () {
   while IFS= read -r -n1 ch; do
     case $ch in
       '')
-        buffer=$(decorate "$buffer")
-        echo     "$buffer"
-        echo -ne  "$(date '+%Y-%m-%d %H:%M:%S')\t" >> "$1"
-        echo   "$buffer" >> "$1"
+        std=$(decorate "$buffer" 1)
+        log=$(decorate "$buffer")
+        echo    "$std"
+        echo -n "$(date '+%Y-%m-%d %H:%M:%S') " >> "$1"
+        echo    "$log" >> "$1"
         buffer=
         ;;
       $'\r')
-        buffer=$(decorate "$buffer")
-        echo -n  "$buffer$ch"
-        echo -ne  "$(date '+%Y-%m-%d %H:%M:%S')\t" >> "$1"
-        echo   "$buffer" >> "$1"
+        std=$(decorate "$buffer" 1)
+        log=$(decorate "$buffer")
+        echo -n "$std$ch"
+        echo -n "$(date '+%Y-%m-%d %H:%M:%S') " >> "$1"
+        echo    "$log" >> "$1"
         buffer=
         ;;
       *)

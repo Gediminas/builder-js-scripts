@@ -10,9 +10,6 @@ echo "This is some command output to stdout / SKIPPED"
 echo "This is some command output to stdout / SKIPPED"
 echo "This is some command output to stdout / SKIPPED"
 echo "This is some command output to stdout / SKIPPED"
-echo "This is some command output to stdout / SKIPPED"
-echo "This is some command output to stdout / SKIPPED"
-echo "This is some command output to stdout / SKIPPED"
 echo "This is some command output to stderr / SKIPPED" >&2
 
 echo ERROR: $1 made an error / ERR

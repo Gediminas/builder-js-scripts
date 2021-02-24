@@ -5,16 +5,17 @@
 SCRIPTS="${BASH_SOURCE%[/\\]*}"
 TEMP=$PWD
 mkdir -p ../_repo && cd "$_" 1>/dev/null || exit
-echo -e "\e[35m* SCRIPTS = $SCRIPTS\e[0m"
-echo -e "\e[35m* TEMP = $TEMP\e[0m"
+echo -e "[DEBUG] SCRIPTS = $SCRIPTS\e[0m"
+echo -e "[DEBUG] TEMP = $TEMP\e[0m"
+
+echo -e "# CLONE"
+git clone --depth=1 git@vilkas:MxKozijn.git .
 
 #################################################
 if (false); then                     # SKIP START
   echo -n ""
 #################################################
 
-echo -e "\e[33m# CLONE\e[0m"
-git clone --depth=1 git@vilkas:MxKozijn.git .
 sh ./get_submodules.sh --depth=1 --clean --quiet
 
 git rev-parse --short HEAD
@@ -47,14 +48,14 @@ function TTL() {
     timeout 9 "$@"
     case $? in
         124)
-            echo "!!! ERROR: Process Timed Out!"
+            echo "[ERROR] Process Timed Out!"
             exit
             ;;
         0)
-            echo "OK"
+            echo "[OK] Exit code 0"
             ;;
         *)
-            echo "ERROR: Exit code $?"
+            echo "[WARN] Exit code $?"
             ;;
     esac
 }
