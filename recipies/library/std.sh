@@ -3,7 +3,11 @@
 TTL () {
     time=$1; shift
     $@ & local pid=$! start=0
-    while kill -0 $pid; do
+    while true; do
+        kill -0 $pid >/dev/null 2>&1
+        if [ "$?" == "1" ]; then
+            break
+        fi
         read -t 1
         start=$((start+1))
         if [ $start -ge $time ]; then
@@ -13,26 +17,13 @@ TTL () {
     done
 }
 
-TTLc () {
-    trap -- "" SIGTERM
-
-    local pid=$!
-    local t=$1
-    # local s=$((m * 60))
-
-    (
-        sleep $t
-        echo -e "\nERROR: Timeout $t s"
-        kill $pid
-    ) &
-    wait $pid
-}
+# export -f TTL
 
 TTLa () {
     m=$1; shift
     s=$((m * 60))
     echo ">> $@  [TTL=${m}m]"
-    timeout $s "$@"
+    timeout $s $@
     ret=$?
     case $ret in
           0) ;;
@@ -63,5 +54,20 @@ TTLb () {
         ) &
         wait "$pid"
     )
+}
+
+TTLc () {
+    trap -- "" SIGTERM
+
+    local pid=$!
+    local t=$1
+    # local s=$((m * 60))
+
+    (
+        sleep $t
+        echo -e "\nERROR: Timeout $t s"
+        kill $pid
+    ) &
+    wait $pid
 }
 
