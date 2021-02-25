@@ -4,26 +4,18 @@ DIRNAME="${BASH_SOURCE%[/\\]*}"
 readarray -t errors   < "$DIRNAME/cfg/match_errors.txt"
 readarray -t warnings < "$DIRNAME/cfg/match_warnings.txt"
 
-# for  match in "${errors[@]}"; do
-# \	echo "E: {$match}"
-# done
-
-# for match in "${warnings[@]}"; do
-# 	echo "W: $match"
-# done
-
 ##################################################
 # FUNCTIONS
 
-decorate () {
+Decorate () {
   forlog=$2
 
   # HEADER
-  if [[ $1 =~ (^#\ ) ]]; then
+  if [[ $1 =~ (^#{1,}\ ) ]]; then
      [ "$forlog" ] && echo -ne "\e[93m" || echo -ne "# "
      echo -n "$1"
      [ "$forlog" ] && echo -e  "\e[m"
-     exit
+     return 0
   fi
 
   # COMMAND
@@ -31,7 +23,7 @@ decorate () {
      [ "$forlog" ] && echo -ne "\e[96m" || echo -ne "> "
      echo -n "$1"
      [ "$forlog" ] && echo -e  "\e[m"
-     exit
+     return 0
   fi
 
   # DEBUG
@@ -39,7 +31,7 @@ decorate () {
      [ "$forlog" ] && echo -ne "\e[98m" || echo -ne "D "
      echo -n "$1"
      [ "$forlog" ] && echo -e  "\e[m"
-     exit
+     return 0
   fi
 
   # OK
@@ -47,54 +39,53 @@ decorate () {
      [ "$forlog" ] && echo -ne "\e[42m" || echo -ne "V "
      echo -n "$1"
      [ "$forlog" ] && echo -e  "\e[m"
-     exit
+     return 0
   fi
 
-  # ERROR
+  # WARNING
   for match in "${warnings[@]}"; do
     if [[ $1 =~ $match ]]; then
       [ "$forlog" ] && echo -ne "\e[7;49;93m[W] " || echo -ne "W "
       echo -n "$1"
       [ "$forlog" ] && echo -e  "\e[m"
-      exit
+      return 0
     fi
   done
 
-  # WARNING
+  # ERROR
   for match in "${errors[@]}"; do
     if [[ $1 =~ $match ]]; then
       [ "$forlog" ] && echo -ne "\e[7;49;91m[E] " || echo -ne "E "
       echo -n "$1"
       [ "$forlog" ] && echo -e  "\e[m"
-      exit
+      return 1
     fi
   done
 
   # OTHER
-  [ "$forlog" ] && echo -ne "\e[32m" || echo -ne "< "
+  [ "$forlog" ] && echo -ne "\e[32m" || echo -ne "_ "
   echo -n "$1"
   [ "$forlog" ] && echo -e  "\e[m"
+  return 0
 }
 
-teetime () {
+TeeTimeDecor () {
   buffer=
   while IFS= read -r -n1 ch; do
     case $ch in
-      '')
-        std=$(decorate "$buffer" 1)
-        log=$(decorate "$buffer")
+      '' | $'\r')
+        std=$(Decorate "$buffer" 1)
+        log=$(Decorate "$buffer")
+        halt="$?"
+        echo -n "$(date '+%Y-%m-%d %H:%M:%S') " >> "$1"
+        echo    "$log" >> "$1"
         echo    "$std"
-        echo -n "$(date '+%Y-%m-%d %H:%M:%S') " >> "$1"
-        echo    "$log" >> "$1"
         buffer=
-        ;;
-      $'\r')
-        std=$(decorate "$buffer" 1)
-        log=$(decorate "$buffer")
-        echo -n "$std$ch"
-        echo -n "$(date '+%Y-%m-%d %H:%M:%S') " >> "$1"
-        echo    "$log" >> "$1"
-        buffer=
+        if [ "$halt" == "1" ]; then
+          echo "$(date '+%Y-%m-%d %H:%M:%S') [HALT]" >> "$1"
+          echo "[HALT]"
+          kill -s TERM 0
+        fi
         ;;
       *)
         buffer=$buffer$ch
@@ -115,7 +106,7 @@ product=$1
 debug=$2
 root=$(realpath --no-symlinks "${BASH_SOURCE[0]}")
 root=$(dirname "$root")
-exe=$(realpath --no-symlinks "$root/recipies/$product.rcpt")
+rcpt=$(realpath --no-symlinks "$root/recipies/$product.rcpt")
 
 if [ "$debug" == "debug" ]; then
   tmp="$root/_working/$product/_DEBUG"
@@ -130,6 +121,6 @@ echo "BUILD: TEMP: $tmp"
 
 mkdir -p "$tmp" && pushd "$_" 1>/dev/null || exit
   echo "----------------------------------------"
-  "$exe" |& teetime 0000.log
+  "$rcpt" |& TeeTimeDecor 0000.log
   echo "----------------------------------------"
 popd 1>/dev/null 2>&1

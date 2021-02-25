@@ -1,49 +1,62 @@
 #!/usr/bin/env bash
 
-# REPO GET/PREP/BUILD
-echo -e "# CLONE"
-echo ">> git clone git@vilkas:web_manager.git ../repo"
-git clone git@vilkas:web_manager.git ../repo --progress --recursive
+function TTL() {
+    m=$1; shift
+    s=$(($m * 60))
+    echo ">> $@  [TTL=${m}m]"
+    timeout $s "$@"
+    ret=$?
+    case $ret in
+          0) ;;
+        124) echo "ERROR: Time Out ${m}m: $@" ;;
+          *) echo "[WARN] Exit code $ret" ;;
+    esac
+    return $ret
+}
 
-temp=$PWD
-cd ../repo || exit
-root=$PWD
+# set -e  # exit when any command fails
+SCRIPTS="${BASH_SOURCE%[/\\]*}"
+TEMP=$PWD
+mkdir -p ../_repo && cd "$_" 1>/dev/null || exit
+echo -e "[DEBUG] SCRIPTS = $SCRIPTS\e[0m"
+echo -e "[DEBUG] TEMP = $TEMP\e[0m"
 
-echo -e "* TEMP = $temp"
-echo -e "* ROOT = $root"
+echo "# GIT GET / $repo / $branch"
+TTL 1 sh "$SCRIPTS/library/git_get.sh" "git@vilkas:web_manager.git" "." "master" "--progress --recursive --depth=1"
 
-# REPO PREP
+echo "# GIT PROPS"
+TTL 1 git rev-parse --short HEAD
+
 echo "# INSTALL"
-echo ">> npm install"
-npm install
+TTL 1 npm install
 
 
-# REPO BUILD
-echo "# BUILD"
-echo ">> source build.sh"
-source build.sh
+# # REPO BUILD
+# echo "# BUILD"
+# echo ">> source build.sh"
+# source build.sh
 
-# // COLLECT and MAKE LITE
+# # // COLLECT and MAKE LITE
 
-echo "# COLLECT and MAKE LITE"
-mkdir -p "$temp/dist"
+# echo "# COLLECT and MAKE LITE"
+# mkdir -p "$temp/dist"
 
-cp -av  dist/WebManager.exe "$temp/dist"
-cp -Rav dist/*.sh           "$temp/dist/"
-cp -Rav dist/*.cmd          "$temp/dist/"
-cp -Rav dist/config         "$temp/dist/config/"
-cp -Rav dist/prebuilds      "$temp/dist/prebuilds"
+# cp -av  dist/WebManager.exe "$temp/dist"
+# cp -Rav dist/*.sh           "$temp/dist/"
+# cp -Rav dist/*.cmd          "$temp/dist/"
+# cp -Rav dist/config         "$temp/dist/config/"
+# cp -Rav dist/prebuilds      "$temp/dist/prebuilds"
 
-7z a -t7z -mx9 -mmt "$temp/dist_lite.7z" dist -y
+# 7z a -t7z -mx9 -mmt "$temp/dist_lite.7z" dist -y
 
 
-npm run test2 |& tee "$temp/test.log"
+# npm run test2 |& tee "$temp/test.log"
 
-cp -av  _testing/log.html "$temp/WebManager.html"
-# cp -av  _testing/log.html "d:/mx/builder/www/WebManager.html"
-echo "URL: WebManager.html"
+# cp -av  _testing/log.html "$temp/WebManager.html"
+# # cp -av  _testing/log.html "d:/mx/builder/www/WebManager.html"
+# echo "URL: WebManager.html"
 
-timestamp="2020-02-21"
-ATDB="$temp/builder-AT.s3db";
-bcomment="User comment"
-php test/autotester_save_results.php "$temp/test.log" $timestamp $ATDB "$bcomment"
+# timestamp="2020-02-21"
+# ATDB="$temp/builder-AT.s3db";
+# bcomment="User comment"
+# php test/autotester_save_results.php "$temp/test.log" $timestamp $ATDB "$bcomment"

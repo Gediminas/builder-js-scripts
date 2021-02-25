@@ -1,6 +1,6 @@
-^ERROR:
+(^ERROR:\ )
+(^error:\ )
 (^fatal:\ )
 fatal error
-^cp: cannot stat '.+': No such file or directory$
-^unlink: cannot unlink './dist/WebManager.exe': No such file or directory
+: No such file or directory$
 (npm ERR!\ )
