@@ -1,6 +1,5 @@
-(^ERROR:\ )
-(^error:\ )
-(^fatal:\ )
-fatal error
+^ERROR: .*$
+^error: .*$
+^fatal: .*$
 : No such file or directory$
-(npm ERR!\ )
+^npm ERR! .*$

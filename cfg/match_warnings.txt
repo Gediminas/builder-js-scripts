@@ -1,6 +1,6 @@
-^WARNING:
-^.{4,10}lite error
-highlight$
-PHP Warning:
-DB does not exist
-(npm WARN\ )
+^WARNING: .*$
+^warning: .*$
+^PHP Warning: .*$
+##DB does not exist
+^npm WARN .*$
+^found [0-9]+ vulnerabilities \(

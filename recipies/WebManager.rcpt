@@ -1,34 +1,30 @@
 #!/usr/bin/env bash
+#
+set -o allexport
 
-function TTL() {
-    m=$1; shift
-    s=$(($m * 60))
-    echo ">> $@  [TTL=${m}m]"
-    timeout $s "$@"
-    ret=$?
-    case $ret in
-          0) ;;
-        124) echo "ERROR: Time Out ${m}m: $@" ;;
-          *) echo "[WARN] Exit code $ret" ;;
-    esac
-    return $ret
-}
+RECIPIES="${BASH_SOURCE%[/\\]*}"
+source "$RECIPIES/library/std.sh"
+source "$RECIPIES/library/git_get.sh"
 
 # set -e  # exit when any command fails
-SCRIPTS="${BASH_SOURCE%[/\\]*}"
-TEMP=$PWD
+
 mkdir -p ../_repo && cd "$_" 1>/dev/null || exit
-echo -e "[DEBUG] SCRIPTS = $SCRIPTS\e[0m"
-echo -e "[DEBUG] TEMP = $TEMP\e[0m"
 
-echo "# GIT GET / $repo / $branch"
-TTL 1 sh "$SCRIPTS/library/git_get.sh" "git@vilkas:web_manager.git" "." "master" "--progress --recursive --depth=1"
+echo "# GIT GET"
 
-echo "# GIT PROPS"
-TTL 1 git rev-parse --short HEAD
+# git_get git@vilkas:web_manager.git . master --progress --recursive --depth=1
+# TTL 10 git_get git@vilkas:web_manager.git . master --progress --recursive --depth=1
+# timeout 1s git_get git@vilkas:web_manager.git . master --progress --recursive --depth=1
+sh git_get
 
-echo "# INSTALL"
-TTL 1 npm install
+# timeout 1 git_get git@vilkas:web_manager.git . master --progress --recursive --depth=1
+# TTL3 1 git_get git@vilkas:web_manager.git . master --progress --recursive --depth=1
+
+# echo "# GIT PROPS"
+# TTL 1 git rev-parse --short HEAD
+
+# echo "# INSTALL"
+# TTL 1 npm install
 
 
 # # REPO BUILD
