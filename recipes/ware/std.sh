@@ -1,16 +1,26 @@
 #!/usr/bin/env bash
 
-EnsureStdFolderTree () {
-    $1
+PrepareFolderTree () {
     WORK="$PWD"
-    mkdir -p ../../_data && cd "$_" 1>/dev/null || exit
-    DATA="$PWD"
-    mkdir -p ../_repo && cd "$_" 1>/dev/null || exit
-    REPO="$PWD"
+
+    if [[ $WORK =~ work_debug$ ]]; then
+        cd ../       1>/dev/null || exit
+    else
+        cd ../../../ 1>/dev/null || exit
+    fi
+
+    mkdir -p ./data && pushd "$_" 1>/dev/null || exit
+        DATA="$PWD"
+    popd 1>/dev/null || exit
+
+    mkdir -p ./repo && pushd "$_" 1>/dev/null || exit
+        REPO="$PWD"
+    popd 1>/dev/null || exit
+
     cd "$WORK" 1>/dev/null || exit
 }
 
-PrintStdFolders () {
+PrintFolders () {
     echo "~ DATA: $DATA"
     echo "~ REPO: $REPO"
     echo "~ WORK: $WORK"

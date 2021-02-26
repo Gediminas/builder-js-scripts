@@ -104,27 +104,29 @@ fi
 
 PRODUCT=$1
 DEBUG=$2
-SOURCE=$(realpath --no-symlinks "${BASH_SOURCE[0]}")
-RECIPES=$(dirname "$SOURCE")
-RECIPE=$(realpath --no-symlinks "$ROOT/recipies/$PRODUCT.rcpt")
+THIS_SCRIPT=$(realpath --no-symlinks "${BASH_SOURCE[0]}")
+REPO_ROOT=$(dirname "$THIS_SCRIPT")
+RECIPE=$(realpath --no-symlinks "$REPO_ROOT/recipes/$PRODUCT.rcpt")
 
 if [ "$DEBUG" == "debug" ]; then
-  WORK="$ROOT/_working/$PRODUCT/_DEBUG"
+  WORK="$REPO_ROOT/_working/$PRODUCT/work_debug"
 else
   now=$(date)
-  sub1=$(date --date="$now" '+%Y-%m-%d')
+  sub1=$(date --date="$now" '+%Y-%m')
   sub2=$(date --date="$now" '+%Y-%m-%d_%H-%M-%S')
-  WORK="$RECIPES"/_working/"$PRODUCT"/$sub1/$sub2
+  WORK="$REPO_ROOT/_working/$PRODUCT/work/$sub1/$sub2"
 fi
 
 echo "----------------------------------------"
-echo "BUILD: PRODUCT: $PRODUCT"
-echo "BUILD: RECIPES: $RECIPES"
-echo "BUILD: RECIPE:  $RECIPE"
-echo "BUILD: WORK:    $WORK"
+if [ "$DEBUG" == "debug" ]; then
+  echo "PRODUCT: $PRODUCT (debug)"
+else
+  echo "PRODUCT: $PRODUCT"
+fi
+echo "----------------------------------------"
 
 mkdir -p "$WORK" && pushd "$_" 1>/dev/null || exit
-  echo "----------------------------------------"
   "$RECIPE" |& TeeTimeDecor 0000.log
-  echo "----------------------------------------"
 popd 1>/dev/null 2>&1
+
+echo "----------------------------------------"

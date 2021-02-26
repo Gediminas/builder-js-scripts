@@ -15,6 +15,8 @@ git_get() {
 
     git_check_path="$dir/.git/refs/heads"
     if [ -e "$git_check_path" ]; then
+        pushd "$dir" 1>/dev/null || exit
+
         echo ">> git checkout -- ."
         git checkout -- .
 
@@ -29,6 +31,8 @@ git_get() {
 
         echo ">> git pull --verbose --progress"
         git pull --verbose --progress
+
+        popd 1>/dev/null || exit
     else
         echo ">> git clone "$repo" "$dir" -b "$branch" $@"
         git clone "$repo" "$dir" -b "$branch" $@
