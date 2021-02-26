@@ -102,25 +102,29 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-product=$1
-debug=$2
-root=$(realpath --no-symlinks "${BASH_SOURCE[0]}")
-root=$(dirname "$root")
-rcpt=$(realpath --no-symlinks "$root/recipies/$product.rcpt")
+PRODUCT=$1
+DEBUG=$2
+SOURCE=$(realpath --no-symlinks "${BASH_SOURCE[0]}")
+RECIPES=$(dirname "$SOURCE")
+RECIPE=$(realpath --no-symlinks "$ROOT/recipies/$PRODUCT.rcpt")
 
-if [ "$debug" == "debug" ]; then
-  tmp="$root/_working/$product/_DEBUG"
-  rm -fdr "$tmp/_repo"
+if [ "$DEBUG" == "debug" ]; then
+  WORK="$ROOT/_working/$PRODUCT/_DEBUG"
 else
-  tmp="$root/_working/$product/$(date '+%Y-%m-%d_%H-%M-%S')"
+  now=$(date)
+  sub1=$(date --date="$now" '+%Y-%m-%d')
+  sub2=$(date --date="$now" '+%Y-%m-%d_%H-%M-%S')
+  WORK="$RECIPES"/_working/"$PRODUCT"/$sub1/$sub2
 fi
 
 echo "----------------------------------------"
-echo "BUILD: PROD: $exe"
-echo "BUILD: TEMP: $tmp"
+echo "BUILD: PRODUCT: $PRODUCT"
+echo "BUILD: RECIPES: $RECIPES"
+echo "BUILD: RECIPE:  $RECIPE"
+echo "BUILD: WORK:    $WORK"
 
-mkdir -p "$tmp" && pushd "$_" 1>/dev/null || exit
+mkdir -p "$WORK" && pushd "$_" 1>/dev/null || exit
   echo "----------------------------------------"
-  "$rcpt" |& TeeTimeDecor 0000.log
+  "$RECIPE" |& TeeTimeDecor 0000.log
   echo "----------------------------------------"
 popd 1>/dev/null 2>&1

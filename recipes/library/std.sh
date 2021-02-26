@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 
-EnsureStdFolderTreeAndCdRepo () {
-    TEMP="$PWD"
-    mkdir -p ../_data && pushd "$_" 1>/dev/null || exit
-    mkdir -p git_log 1>/dev/null
+EnsureStdFolderTree () {
+    $1
+    WORK="$PWD"
+    mkdir -p ../../_data && cd "$_" 1>/dev/null || exit
     DATA="$PWD"
-    popd 1>/dev/null || exit
     mkdir -p ../_repo && cd "$_" 1>/dev/null || exit
     REPO="$PWD"
+    cd "$WORK" 1>/dev/null || exit
 }
 
 PrintStdFolders () {
-    echo "~ DATA:     $DATA"
-    echo "~ REPO:     $REPO"
-    echo "~ TEMP:     $TEMP"
+    echo "~ DATA: $DATA"
+    echo "~ REPO: $REPO"
+    echo "~ WORK: $WORK"
 }
 
 TTL () {
