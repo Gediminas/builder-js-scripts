@@ -4,3 +4,4 @@
 ^mkdir: cannot create directory '.*': File exists$
 : No such file or directory$
 ^npm ERR! .*$
+: command not found$

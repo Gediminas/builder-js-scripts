@@ -14,7 +14,8 @@ echo "# GIT GET"
 TTL 1 git_get git@vilkas:web_manager.git . master --progress --recursive --depth=1
 
 echo "# GIT HASH"
-TTL 1 git rev-parse --short HEAD
+HASH=$(TTX 1 git rev-parse --short HEAD)
+echo "~ HASH: ${HASH}"
 
 echo "# GIT LOG"
 # git log -1000 --no-merges --date=iso --pretty=format:"%%H | %%ad | %%an | %%s" | tee "$TEMP/distr/git.log"

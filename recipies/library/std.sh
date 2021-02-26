@@ -45,6 +45,22 @@ TTL () {
     done
 }
 
+TTX () {
+    local -i m=$1; shift
+    $@ &
+    local -i pid=$!
+    local -i span=0
+    local -i s=$((m * 60))
+
+    while kill -0 $pid >/dev/null 2>&1; do
+        sleep 1
+        ((s++))
+        if [ $span -ge $s ]; then
+            echo -e "\nERROR: Timeout ${m}m"
+        fi
+    done
+}
+
 # export -f TTL
 
 # TTLa () {
