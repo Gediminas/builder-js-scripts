@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
 ## forking is evil
 TTL () {
-    local -i time=$1; shift
+    local -i lifespan=$1; shift
     $@ &
     local pid=$!
-    local start=0
+    local elapsed=0
     while kill -0 $pid >/dev/null 2>&1; do
-        # read -t 1
         sleep 1
-        start=$((start+1))
-        if [ $start -ge $time ]; then
-            echo -e "\nERROR: Timeout $time s"
+        ((elapsed++))
+        if [ $elapsed -ge $lifespan ]; then
+            echo -e "\nERROR: Timeout ${lifespan}s"
 
             # kill $pid >/dev/null 2>&1
 

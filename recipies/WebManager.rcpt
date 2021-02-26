@@ -10,13 +10,14 @@ source "$RECIPIES/library/git_get.sh"
 
 mkdir -p ../_repo && cd "$_" 1>/dev/null || exit
 
+echo ""
 echo "# GIT GET"
 
 # git_get git@vilkas:web_manager.git . master --progress --recursive --depth=1
 # TTL 10 git_get git@vilkas:web_manager.git . master --progress --recursive --depth=1
 # timeout 1s git_get git@vilkas:web_manager.git . master --progress --recursive --depth=1
 
- TTL 1 git_get git@vilkas:web_manager.git . master --progress --recursive --depth=1
+ TTL 11 git_get git@vilkas:web_manager.git . master --progress --recursive --depth=1
 
 echo ""
 echo "# GIT GET2"
