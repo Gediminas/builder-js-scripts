@@ -27,8 +27,8 @@ Decorate () {
   fi
 
   # DEBUG
-  if [[ $1 =~ (^\[DEBUG\]\ ) ]]; then
-     [ "$forlog" ] && echo -ne "\e[98m" || echo -ne "~ "
+  if [[ $1 =~ ^~ ]]; then
+     [ "$forlog" ] && echo -ne "\e[35m" || echo -ne "~ "
      echo -n "$1"
      [ "$forlog" ] && echo -e  "\e[m"
      return 0

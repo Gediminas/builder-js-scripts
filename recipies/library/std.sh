@@ -1,15 +1,36 @@
 #!/usr/bin/env bash
 
+EnsureStdFolderTreeAndCdRepo () {
+    TEMP="$PWD"
+    mkdir -p ../_data && pushd "$_" 1>/dev/null || exit
+    mkdir -p git_log 1>/dev/null
+    DATA="$PWD"
+    popd 1>/dev/null || exit
+    mkdir -p ../_repo && cd "$_" 1>/dev/null || exit
+    REPO="$PWD"
+}
+
+PrintStdFolders () {
+    echo "~ DATA:     $DATA"
+    echo "~ REPO:     $REPO"
+    echo "~ TEMP:     $TEMP"
+}
+
 TTL () {
-    local -i lifespan=$1; shift
+    local -i m=$1; shift
+
+    echo ">> $@ [TTL=${m}m]"
     $@ &
-    local pid=$!
-    local elapsed=0
+
+    local -i pid=$!
+    local -i span=0
+    local -i s=$((m * 60))
+
     while kill -0 $pid >/dev/null 2>&1; do
         sleep 1
-        ((elapsed++))
-        if [ $elapsed -ge $lifespan ]; then
-            echo -e "\nERROR: Timeout ${lifespan}s"
+        ((s++))
+        if [ $span -ge $s ]; then
+            echo -e "\nERROR: Timeout ${m}m"
 
             # kill $pid >/dev/null 2>&1
 
