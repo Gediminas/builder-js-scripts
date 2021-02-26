@@ -16,8 +16,9 @@ echo "# GIT GET"
 # TTL 10 git_get git@vilkas:web_manager.git . master --progress --recursive --depth=1
 # timeout 1s git_get git@vilkas:web_manager.git . master --progress --recursive --depth=1
 
- TTL 11 git_get git@vilkas:web_manager.git . master --progress --recursive --depth=1
+ TTL 1 git_get git@vilkas:web_manager.git . master --progress --recursive --depth=1
 
+echo ""
 echo "# GIT GET2"
  TTL 1 git_get git@vilkas:web_manager.git . master --progress --recursive --depth=1
 
