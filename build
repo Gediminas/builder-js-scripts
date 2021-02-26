@@ -79,7 +79,11 @@ TeeTimeDecor () {
         halt="$?"
         echo -n "$(date '+%Y-%m-%d %H:%M:%S') " >> "$1"
         echo    "$log" >> "$1"
-        echo    "$std"
+        if [ "$ch" == "" ]; then
+            echo "$std"
+        else
+            echo -n "$std$ch"
+        fi
         buffer=
         if [ "$halt" == "1" ]; then
           echo "$(date '+%Y-%m-%d %H:%M:%S') [HALT]" >> "$1"
