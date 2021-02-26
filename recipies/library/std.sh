@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-## forking is evil
+
 TTL () {
     local -i lifespan=$1; shift
     $@ &

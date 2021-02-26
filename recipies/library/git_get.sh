@@ -39,4 +39,4 @@ git_get() {
     # sh ./get_submodules.sh --clean --quiet "$@"
 }
 
-export -f git_get
+# export -f git_get
