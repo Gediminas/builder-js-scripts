@@ -9,6 +9,10 @@ PrepareFolderTree () {
         cd ../../../ 1>/dev/null || exit
     fi
 
+    mkdir -p ../../bin && pushd "$_" 1>/dev/null || exit
+        PATH=$PWD:$PATH
+    popd 1>/dev/null || exit
+
     mkdir -p ./data && pushd "$_" 1>/dev/null || exit
         DATA="$PWD"
     popd 1>/dev/null || exit

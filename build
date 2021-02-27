@@ -83,7 +83,7 @@ TeeTimeDecor () {
         buffer=
         if [ "$halt" == "1" ]; then
           echo "$(date '+%Y-%m-%d %H:%M:%S') [HALT]" >> "$1"
-          echo "[HALT]"
+          echo -e "\n\e[7;49;91m[HALT]\e[m"
           kill -s TERM 0
         fi
         ;;

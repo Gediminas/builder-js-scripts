@@ -2,6 +2,8 @@
 ^error: .*$
 ^fatal: .*$
 ^mkdir: cannot create directory '.*': File exists$
+^cp: failed to access '.*': Not a directory$
+: command not found$
 : No such file or directory$
 ^npm ERR! .*$
-: command not found$
+.*: The system cannot find the file specified\.$
