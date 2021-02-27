@@ -5,6 +5,7 @@
 RECIPES="${BASH_SOURCE%[/\\]*}"
 source "${RECIPES}"/ware/std.sh
 source "${RECIPES}"/ware/git_get.sh
+# source "${RECIPES}"/ware/build_cfg.sh
 
 PrepareFolderTree
 PrintFolders
@@ -19,7 +20,6 @@ HASH=$(TTX 1 git rev-parse --short HEAD)
 echo "HASH: ${HASH}"
 
 echo "# GIT LOG"
-# rd /S /Q *
 git log -10 --no-merges --date=iso --pretty=format:'%h | %ad | %an | %s' | tee "$TEMP/distr/git.log"
 echo ""
 
