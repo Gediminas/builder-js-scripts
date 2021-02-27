@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
-# shellcheck disable=SC2116,SC2086
+# shellcheck disable=SC1090
 
 RECIPES="${BASH_SOURCE%[/\\]*}"
-source "${RECIPES}/ware/std.sh"
-source "${RECIPES}/ware/git_get.sh"
-# source "$RECIPIES/ware/build_cfg.sh"
+source "${RECIPES}"/ware/std.sh
+source "${RECIPES}"/ware/git_get.sh
 
 PrepareFolderTree
 PrintFolders
@@ -13,16 +12,13 @@ cd "$REPO" || exit
 echo "~ CURR: $PWD"
 
 echo "# GIT GET"
-TTL 1 git_get git@vilkas:web_manager.git web_manager master --progress --recursive #--depth=1
-cd web_manager || exit
+TTL 1 git_get git@vilkas:web_manager.git . master --progress --recursive #--depth=1
 
 echo "# GIT HASH"
 HASH=$(TTX 1 git rev-parse --short HEAD)
 echo "HASH: ${HASH}"
 
 echo "# GIT LOG"
-# git log -1000 --no-merges --date=iso --pretty=format:"%%H | %%ad | %%an | %%s" | tee "$TEMP/distr/git.log"
-# TTL 1 git log -3 --no-merges --date=iso | tee "${WORK}/distr/git.log"
 git log -10 --no-merges --date=iso --pretty=format:'%h | %ad | %an | %s' | tee "$TEMP/distr/git.log"
 echo ""
 
@@ -30,7 +26,7 @@ echo "# INSTALL"
 TTL 1 npm install
 
 echo "# BUILD"
-TTL 1  source build.sh
+TTL 1 . build.sh
 
 echo "# COLLECT DISTR (lite)"
 echo ">> Filtered copy: ./dist --> $WORK/distr/"
@@ -40,7 +36,6 @@ cp -v  dist/*.cmd          "$WORK/distr/"
 cp -Rv dist/config         "$WORK/distr/"
 cp -Rv dist/prebuilds      "$WORK/distr/"
 TTL 1 7za a -t7z -mx9 -mmt "$WORK/dist_lite.7z" "$WORK/distr" -y
-
 
 # echo $PWD
 # npm run test2 |& tee "$WORK/test.log"
