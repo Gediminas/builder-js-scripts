@@ -6,6 +6,7 @@ RECIPES="${BASH_SOURCE%[/\\]*}"
 source "${RECIPES}"/ware/std.sh
 source "${RECIPES}"/ware/git_get.sh
 source "${RECIPES}"/ware/build_cfg.sh
+source "${RECIPES}"/ware/build_cmake.sh
 
 PrepareFolderTree
 PrintFolders
@@ -13,31 +14,29 @@ cd "$REPO" || exit
 echo "~ CURR: $PWD"
 
 #################################################
-# if (false); then; echo -n ""       # SKIP START
+if (false); then echo -n ""       # SKIP START
 #################################################
 
 echo "# GIT GET"
 TTL 1 git_get git@vilkas:MxKozijn.git . master --progress --recursive --depth=1
+
+#################################################
+fi                                   # SKIP END
+#################################################
 
 echo "# GIT HASH"
 HASH=$(TTX 1 git rev-parse --short HEAD)
 echo "HASH: ${HASH}"
 
 echo "# GIT LOG"
-git log -10 --no-merges --date=iso --pretty=format:'%h | %ad | %an | %s' | tee "$TEMP/distr/git.log"
+git log -10 --no-merges --date=iso --pretty=tformat:"%h | %ad | %<(10)%an | %s" | tee "$TEMP/distr/git.log"
 echo ""
-
-#################################################
-# fi                                   # SKIP END
-#################################################
-
-
 
 # # //---------- BUILD ---------------------
 
-# "$SCRIPTS/library/BuildCMake build/wood.cfg"       "Visual Studio 16 2019" Win32
-# "$SCRIPTS/library/BuildCMake build/_libraries.cfg" 'Visual Studio 16 2019' Win32
-# "$SCRIPTS/library/BuildCMake build/utils.cfg"      'Visual Studio 16 2019' Win32
+BuildCMake build/_libraries.cfg 'Visual Studio 16 2019' Win32
+BuildCMake build/wood.cfg       "Visual Studio 16 2019" Win32
+BuildCMake build/utils.cfg      'Visual Studio 16 2019' Win32
 
 # php Language/bin/CompileMo.php "Language\EN"
 # php Language/bin/CompileMo.php "Language\NL"
@@ -46,11 +45,7 @@ echo ""
 # # unlink Wood/www_desktop/locale/nl_NL/LC_MESSAGES/pvc_www.po
 # # unlink Wood/www_desktop/locale/en_EN/LC_MESSAGES/pvc_www.po
 
-
-
-
 # # SetEnv('ide_vc19')
-# # TTL ping 8.8.8.8
 # TTL 9 "$SCRIPTS/library/BuildCfg" ide_vc19 build\_wx.cfg        "DLL Release" Win32
 # TTL 9 "$SCRIPTS/library/BuildCfg" ide_vc19 build\_libraries.cfg Release
 # TTL 9 "$SCRIPTS/library/BuildCfg" ide_vc19 build\wood.cfg       Release
