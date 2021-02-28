@@ -1,23 +1,32 @@
 #!/usr/bin/env bash
 
 BuildCMake () {
-    build_cfg_file="$1"
+    build_cfg="$1"
     generator="$2"
     architecture="$3"
+
     repo=$PWD
     collect_cmake="$repo/Builder/local/CMake/scripts/php/collect_cmake_files.php"
     clean_cmake="$repo/Builder/local/CMake/scripts/cmake/clean_cmake.cmake"
     build_list="$repo/Builder/local/temp/cmake_paths.txt"
     cmake="$repo/Builder/local/CMake/bin/cmake";
-    # cmake=cmake
+
+    echo "---"
+    echo "~ PHP"
+    php --version
+    echo "---"
+    echo "~ cmake"
+    cmake.cmd --version
+    echo "---"
+    exit
 
     echo "================="
-    echo "build_cfg_file = $build_cfg_file"
+    echo "build_cfg = $build_cfg"
     echo "generator = $generator"
     echo "architecture = $architecture"
     echo "curdir = $curdir"
 
-    php "$collect_cmake" "$build_cfg_file" "$build_list"
+    php "$collect_cmake" "$build_cfg" "$build_list"
 
     while IFS=$'\r\n' read -r generate_path || [[ -n $generate_path ]]; do
     cd "$generate_path" || continue

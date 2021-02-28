@@ -20,10 +20,6 @@ if (false); then echo -n ""       # SKIP START
 echo "# GIT GET"
 TTL 1 git_get git@vilkas:MxKozijn.git . master --progress --recursive --depth=1
 
-#################################################
-fi                                   # SKIP END
-#################################################
-
 echo "# GIT HASH"
 HASH=$(TTX 1 git rev-parse --short HEAD)
 echo "HASH: ${HASH}"
@@ -31,6 +27,10 @@ echo "HASH: ${HASH}"
 echo "# GIT LOG"
 git log -10 --no-merges --date=iso --pretty=tformat:"%h | %ad | %<(10)%an | %s" | tee "$TEMP/distr/git.log"
 echo ""
+
+#################################################
+fi                                   # SKIP END
+#################################################
 
 # # //---------- BUILD ---------------------
 
