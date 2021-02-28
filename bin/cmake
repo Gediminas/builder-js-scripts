@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+RECIPES="${BASH_SOURCE%[/\\]*}"
+"${RECIPES}"/cmake-3.16/bin/cmake $@
