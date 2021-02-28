@@ -30,6 +30,18 @@ PrintFolders () {
     echo "~ WORK: $WORK"
 }
 
+PrintSystemIInfo () {
+    echo "----------"
+    echo "~ System Info:"
+    echo "----------"
+    echo "~ PHP:"
+    php --version
+    echo "----------"
+    echo "~ cmake:"
+    cmake --version
+    echo "----------"
+}
+
 TTL () {
     local -i m=$1; shift
 

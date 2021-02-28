@@ -11,15 +11,6 @@ BuildCMake () {
     build_list="$repo/Builder/local/temp/cmake_paths.txt"
     cmake="$repo/Builder/local/CMake/bin/cmake";
 
-    echo "---"
-    echo "~ PHP"
-    php --version
-    echo "---"
-    echo "~ cmake"
-    cmake.cmd --version
-    echo "---"
-    exit
-
     echo "================="
     echo "build_cfg = $build_cfg"
     echo "generator = $generator"

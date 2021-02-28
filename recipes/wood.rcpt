@@ -8,10 +8,13 @@ source "${RECIPES}"/ware/git_get.sh
 source "${RECIPES}"/ware/build_cfg.sh
 source "${RECIPES}"/ware/build_cmake.sh
 
+echo "# INITIALIZE"
 PrepareFolderTree
 PrintFolders
+PrintSystemIInfo
 cd "$REPO" || exit
 echo "~ CURR: $PWD"
+exit
 
 #################################################
 if (false); then echo -n ""       # SKIP START
