@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 BuildCMake () {
-    build_cfg_file="$1"
+    build_cfg="$1"
     generator="$2"
     architecture="$3"
 
@@ -13,13 +13,13 @@ BuildCMake () {
     # cmake=cmake
 
     echo "================="
-    echo "build_cfg_file = $build_cfg_file"
+    echo "build_cfg = $build_cfg"
     echo "generator = $generator"
     echo "architecture = $architecture"
     echo "curdir = $curdir"
 
-    echo ">> php $collect_cmake $build_cfg_file $build_list"
-    php "$collect_cmake" "$build_cfg_file" "$build_list"
+    echo ">> php $collect_cmake $build_cfg $build_list"
+    php "$collect_cmake" "$build_cfg" "$build_list"
 
     while IFS=$'\r\n' read -r generate_path || [[ -n $generate_path ]]; do
         cd "$generate_path" || continue
