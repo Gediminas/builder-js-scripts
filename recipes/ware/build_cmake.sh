@@ -5,39 +5,37 @@ BuildCMake () {
     generator="$2"
     architecture="$3"
 
-    repo=$PWD
-    collect_cmake="$repo/Builder/local/CMake/scripts/php/collect_cmake_files.php"
-    clean_cmake="$repo/Builder/local/CMake/scripts/cmake/clean_cmake.cmake"
-    build_list="$repo/Builder/local/temp/cmake_paths.txt"
-    cmake="$repo/Builder/local/CMake/bin/cmake";
+    collect_cmake="Builder/local/CMake/scripts/php/collect_cmake_files.php"
+    clean_cmake="Builder/local/CMake/scripts/cmake/clean_cmake.cmake"
+    build_list="$WORK/cmake_paths.txt"
 
     echo "================="
     echo "build_cfg = $build_cfg"
     echo "generator = $generator"
     echo "architecture = $architecture"
-    echo "curdir = $curdir"
 
-    php "$collect_cmake" "$build_cfg" "$build_list"
+    TTL 1 php "$collect_cmake" "$build_cfg" "$build_list"
 
-    while IFS=$'\r\n' read -r generate_path || [[ -n $generate_path ]]; do
-    cd "$generate_path" || continue
+    bak_dir=$PWD
+    cd ../../../bin
+    while IFS=$'\r\n' read -r generation_path || [[ -n $generation_path ]]; do
+        # echo "Generating in $generation_path"
+        # cd "$generation_path" || continue
 
-    echo "Generating in $generate_path"
+        echo ">> cmake \"$generation_path\" -G \"$generator\" -A \"$architecture\""
+        output=$(cmake "$generation_path" -G"$generator" -A"$architecture";)
+        echo "$output"
 
-    output=$($cmake "$generate_path" -G "$generator" -A "$architecture";)
+        # # $pos = strpos($output, "CMakeOutput.log");
+        # # if( $pos !== false) {
+        # # 	_log_error("There were errors generating in $generate_path.");
+        # # }
+        # # else {
+        # # 	_log_to($command_log, "$output");
+        # # }
 
-    echo "$output"
-    # $pos = strpos($output, "CMakeOutput.log");
-    # if( $pos !== false) {
-    # 	_log_error("There were errors generating in $generate_path.");
-    # }
-    # else {
-    # 	_log_to($command_log, "$output");
-    # }
-
-    $cmake -Dgeneration_path="$generate_path" -P $clean_cmake
+        # TTL 1 cmake -Dgeneration_path="$generation_path" -P "$clean_cmake"
 
     done <$build_list
-
-    cd $curdir || exit
+    cd $bak_dir || exit
 }

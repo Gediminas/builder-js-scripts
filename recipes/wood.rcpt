@@ -14,7 +14,6 @@ PrintFolders
 PrintSystemIInfo
 cd "$REPO" || exit
 echo "~ CURR: $PWD"
-exit
 
 #################################################
 if (false); then echo -n ""       # SKIP START
