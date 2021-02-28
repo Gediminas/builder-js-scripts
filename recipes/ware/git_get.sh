@@ -26,8 +26,8 @@ git_get() {
         echo ">> git reset --hard "origin/${branch}" --verbose --progress"
         git reset --hard "origin/${branch}"
 
-        echo ">> git clean -fdx"
-        git clean -fdx
+        # echo ">> git clean -fdx"
+        # git clean -fdx
 
         echo ">> git pull --verbose --progress"
         git pull --verbose --progress

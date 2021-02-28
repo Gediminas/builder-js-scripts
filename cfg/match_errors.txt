@@ -1,6 +1,7 @@
 ^ERROR: .*$
 ^error: .*$
 ^fatal: .*$
+^CMake Error: .*$
 ^mkdir: cannot create directory '.*': File exists$
 ^cp: failed to access '.*': Not a directory$
 : command not found$

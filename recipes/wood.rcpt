@@ -16,11 +16,12 @@ cd "$REPO" || exit
 echo "~ CURR: $PWD"
 
 #################################################
-if (false); then echo -n ""       # SKIP START
+# if (false); then echo -n ""       # SKIP START
 #################################################
 
 echo "# GIT GET"
 TTL 1 git_get git@vilkas:MxKozijn.git . master --progress --recursive --depth=1
+TTL 1 . get_submodules.sh --progress --recursive --depth=1
 
 echo "# GIT HASH"
 HASH=$(TTX 1 git rev-parse --short HEAD)
@@ -30,15 +31,15 @@ echo "# GIT LOG"
 git log -10 --no-merges --date=iso --pretty=tformat:"%h | %ad | %<(10)%an | %s" | tee "$TEMP/distr/git.log"
 echo ""
 
-#################################################
-fi                                   # SKIP END
-#################################################
-
 # # //---------- BUILD ---------------------
 
 BuildCMake build/_libraries.cfg 'Visual Studio 16 2019' Win32
 BuildCMake build/wood.cfg       "Visual Studio 16 2019" Win32
 BuildCMake build/utils.cfg      'Visual Studio 16 2019' Win32
+
+#################################################
+# fi                                   # SKIP END
+#################################################
 
 # php Language/bin/CompileMo.php "Language\EN"
 # php Language/bin/CompileMo.php "Language\NL"
