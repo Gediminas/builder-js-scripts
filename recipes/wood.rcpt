@@ -31,8 +31,7 @@ echo "# GIT LOG"
 git log -10 --no-merges --date=iso --pretty=tformat:"%h | %ad | %<(10)%an | %s" | tee "$TEMP/distr/git.log"
 echo ""
 
-# # //---------- BUILD ---------------------
-
+echo "# CMAKE";
 BuildCMake build/_libraries.cfg 'Visual Studio 16 2019' Win32
 BuildCMake build/wood.cfg       "Visual Studio 16 2019" Win32
 BuildCMake build/utils.cfg      'Visual Studio 16 2019' Win32
@@ -49,6 +48,7 @@ rm -vf Wood/www_desktop/locale/en_NL/LC_MESSAGES/pvc_www.po
 fi                                   # SKIP END
 #################################################
 
+echo "# BUILD";
 # # SetEnv('ide_vc19')
 # TTL 9 "$SCRIPTS/library/BuildCfg" ide_vc19 build\_wx.cfg        "DLL Release" Win32
 # TTL 9 "$SCRIPTS/library/BuildCfg" ide_vc19 build\_libraries.cfg Release
