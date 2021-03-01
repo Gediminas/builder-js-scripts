@@ -11,12 +11,12 @@ source "${RECIPES}"/ware/build_cmake.sh
 echo "# INITIALIZE"
 PrepareFolderTree
 PrintFolders
-PrintSystemIInfo
+PrintSystemInfo
 cd "$REPO" || exit
-echo "~ CURR: $PWD"
+echo "! CURRENT FOLDER: $PWD"
 
 #################################################
-# if (false); then echo -n ""       # SKIP START
+if (false); then echo -n ""       # SKIP START
 #################################################
 
 echo "# GIT GET"
@@ -37,16 +37,17 @@ BuildCMake build/_libraries.cfg 'Visual Studio 16 2019' Win32
 BuildCMake build/wood.cfg       "Visual Studio 16 2019" Win32
 BuildCMake build/utils.cfg      'Visual Studio 16 2019' Win32
 
-#################################################
-# fi                                   # SKIP END
-#################################################
+echo "# LANGUAGE";
+php Language/bin/CompileMo.php "$REPO/Language/EN"
+php Language/bin/CompileMo.php "$REPO/Language/NL"
+php Language/bin/CompileMo.php "$REPO/Wood/www_desktop/locale/en_EN/LC_MESSAGES"
+php Language/bin/CompileMo.php "$REPO/Wood/www_desktop/locale/nl_NL/LC_MESSAGES"
+rm -vf Wood/www_desktop/locale/nl_NL/LC_MESSAGES/pvc_www.po
+rm -vf Wood/www_desktop/locale/en_NL/LC_MESSAGES/pvc_www.po
 
-# php Language/bin/CompileMo.php "Language\EN"
-# php Language/bin/CompileMo.php "Language\NL"
-# php Language/bin/CompileMo.php "Wood/www_desktop/locale/en_EN/LC_MESSAGES"
-# php Language/bin/CompileMo.php "Wood/www_desktop/locale/nl_NL/LC_MESSAGES"
-# # unlink Wood/www_desktop/locale/nl_NL/LC_MESSAGES/pvc_www.po
-# # unlink Wood/www_desktop/locale/en_EN/LC_MESSAGES/pvc_www.po
+#################################################
+fi                                   # SKIP END
+#################################################
 
 # # SetEnv('ide_vc19')
 # TTL 9 "$SCRIPTS/library/BuildCfg" ide_vc19 build\_wx.cfg        "DLL Release" Win32

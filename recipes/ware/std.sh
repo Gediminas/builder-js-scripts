@@ -30,16 +30,12 @@ PrintFolders () {
     echo "~ WORK: $WORK"
 }
 
-PrintSystemIInfo () {
-    echo "----------"
-    echo "~ System Info:"
-    echo "----------"
-    echo "~ PHP:"
-    php --version
-    echo "----------"
-    echo "~ cmake:"
-    cmake --version
-    echo "----------"
+PrintSystemInfo () {
+    echo "! System Info:"
+    echo -n "! * "
+    php --version | head -n 1
+    echo -n "! * "
+    cmake --version | head -n 1
 }
 
 TTL () {
