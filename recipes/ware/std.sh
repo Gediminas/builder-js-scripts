@@ -10,6 +10,7 @@ PrepareFolderTree () {
     fi
 
     mkdir -p ../../bin && pushd "$_" 1>/dev/null || exit
+        PATH=$PWD/gettext_tools:$PATH
         PATH=$PWD:$PATH
     popd 1>/dev/null || exit
 

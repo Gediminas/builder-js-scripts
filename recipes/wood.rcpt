@@ -7,6 +7,7 @@ source "${RECIPES}"/ware/std.sh
 source "${RECIPES}"/ware/git_get.sh
 source "${RECIPES}"/ware/build_cfg.sh
 source "${RECIPES}"/ware/build_cmake.sh
+source "${RECIPES}"/ware/po2mo.sh
 
 echo "# INITIALIZE"
 PrepareFolderTree
@@ -36,21 +37,21 @@ BuildCMake build/_libraries.cfg 'Visual Studio 16 2019' Win32
 BuildCMake build/wood.cfg       "Visual Studio 16 2019" Win32
 BuildCMake build/utils.cfg      'Visual Studio 16 2019' Win32
 
-echo "# LANGUAGE";
-php Language/bin/CompileMo.php "$REPO/Language/EN"
-php Language/bin/CompileMo.php "$REPO/Language/NL"
-php Language/bin/CompileMo.php "$REPO/Wood/www_desktop/locale/en_EN/LC_MESSAGES"
-php Language/bin/CompileMo.php "$REPO/Wood/www_desktop/locale/nl_NL/LC_MESSAGES"
-rm -vf Wood/www_desktop/locale/nl_NL/LC_MESSAGES/pvc_www.po
-rm -vf Wood/www_desktop/locale/en_NL/LC_MESSAGES/pvc_www.po
-
 #################################################
 fi                                   # SKIP END
 #################################################
 
+echo "# LANGUAGE";
+po2mo "$REPO/Language/EN"
+po2mo "$REPO/Language/NL"
+po2mo "$REPO/Wood/www_desktop/locale/en_EN/LC_MESSAGES"
+po2mo "$REPO/Wood/www_desktop/locale/nl_NL/LC_MESSAGES"
+rm -vf Wood/www_desktop/locale/nl_NL/LC_MESSAGES/pvc_www.po
+rm -vf Wood/www_desktop/locale/en_NL/LC_MESSAGES/pvc_www.po
+
 echo "# BUILD";
 # # SetEnv('ide_vc19')
-# TTL 9 "$SCRIPTS/library/BuildCfg" ide_vc19 build\_wx.cfg        "DLL Release" Win32
+# TTL 9 build_cfg "ide_vc19" "build\_wx.cfg"  "DLL Release" Win32
 # TTL 9 "$SCRIPTS/library/BuildCfg" ide_vc19 build\_libraries.cfg Release
 # TTL 9 "$SCRIPTS/library/BuildCfg" ide_vc19 build\wood.cfg       Release
 # TTL 9 "$SCRIPTS/library/BuildCfg" ide_vc19 build\utils.cfg      Release
