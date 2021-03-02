@@ -37,10 +37,6 @@ BuildCMake build/_libraries.cfg 'Visual Studio 16 2019' Win32
 BuildCMake build/wood.cfg       "Visual Studio 16 2019" Win32
 BuildCMake build/utils.cfg      'Visual Studio 16 2019' Win32
 
-#################################################
-fi                                   # SKIP END
-#################################################
-
 echo "# LANGUAGE";
 po2mo "$REPO/Language/EN"
 po2mo "$REPO/Language/NL"
@@ -49,12 +45,20 @@ po2mo "$REPO/Wood/www_desktop/locale/nl_NL/LC_MESSAGES"
 rm -vf Wood/www_desktop/locale/nl_NL/LC_MESSAGES/pvc_www.po
 rm -vf Wood/www_desktop/locale/en_NL/LC_MESSAGES/pvc_www.po
 
+#################################################
+fi                                   # SKIP END
+#################################################
+
 echo "# BUILD";
 # # SetEnv('ide_vc19')
-# TTL 9 build_cfg "ide_vc19" "build\_wx.cfg"  "DLL Release" Win32
-# TTL 9 "$SCRIPTS/library/BuildCfg" ide_vc19 build\_libraries.cfg Release
-# TTL 9 "$SCRIPTS/library/BuildCfg" ide_vc19 build\wood.cfg       Release
-# TTL 9 "$SCRIPTS/library/BuildCfg" ide_vc19 build\utils.cfg      Release
+TTL 9 build_cfg "build\_wx.cfg"        "ide_vc19" "DLLRelease" Win32
+
+#temp
+TTL 9 build_cfg "build\_tools.cfg"       "ide_vc19" "Release"    Win32
+
+TTL 9 build_cfg "build\_libraries.cfg" "ide_vc19" "Release"    Win32
+TTL 9 build_cfg "build\wood.cfg"       "ide_vc19" "Release"    Win32
+TTL 9 build_cfg "build\utils.cfg"      "ide_vc19" "Release"    Win32
 
 # #  SetTTL('1600')
 # # //---------- js files minimization ------
