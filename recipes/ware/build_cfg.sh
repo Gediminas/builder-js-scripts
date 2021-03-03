@@ -7,7 +7,12 @@ CheckAddProjectConfig() {
     IFS=, configs=("${configs[@]}")
 
     for config in $configs; do
+        if [[ ! -f "$path_dsp" ]]; then
+            echo "ERROR: does not exist"
+            continue
+        fi
          match="<ProjectConfiguration Include=\"$config|$platform\">"
+
          content=$(grep "$match" < "$path_dsp")
          if [ -n "$content" ]; then
              echo "$path_dsp|$config|$platform"
@@ -27,6 +32,7 @@ CollectProjects() {
     readarray -t lines<"$build_cfg"
 
     for line in "${lines[@]}"; do
+        # line=${line%%*(  \r)}
         if [[ "$line" == $'\r' ]]; then
            continue
         fi
