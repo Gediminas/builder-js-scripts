@@ -42,8 +42,11 @@ PrintSystemInfo () {
 TTL () {
     local -i m=$1; shift
 
-    echo ">> $@ [TTL=${m}m]"
-    $@ &
+    echo -n ">> "
+    for arg in "${@}"; do echo -n "\"$arg\" "; done
+    echo " [TTL=${m}m]"
+
+    "$@" &
 
     local -i pid=$!
     local -i span=0

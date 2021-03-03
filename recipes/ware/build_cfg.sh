@@ -1,12 +1,28 @@
 #!/usr/bin/env sh
 
+CheckAddProjectConfig() {
+    path_dsp="$1"
+    configs="$2"
+    platform="$3"
+    IFS=, configs=("${configs[@]}")
+
+    for config in $configs; do
+         match="<ProjectConfiguration Include=\"$config|$platform\">"
+         content=$(grep "$match" < "$path_dsp")
+         if [ -n "$content" ]; then
+             echo "$path_dsp|$config|$platform"
+         fi
+    done
+}
+
 CollectProjects() {
-    # $build_cfg
-    # $configurations
-    # $commands_txt
+    build_cfg="$1"
+    configs="$2"
+    platform="$3"
 
     local build_cfg=$(realpath --no-symlinks $1)
     local ROOT="${build_cfg%[/\\]*}"
+    # local ROOT=$(dirname "$build_cfg")
 
     readarray -t lines<"$build_cfg"
 
@@ -16,32 +32,26 @@ CollectProjects() {
         fi
         path=$(realpath --no-symlinks "$ROOT/$line")
         if [[ $path =~ ".cfg" ]]; then
-            CollectProjects "$path"
+            CollectProjects "$path" "$configs" "$platform"
         else
-            echo "$path"
+            CheckAddProjectConfig "$path" "$configs" "$platform"
         fi
     done
-
-	# $aPth = ReadPathsFromFile($build_cfg);
-	# foreach ($aPth as $i => $path) if (!empty($path)) {
-	# 	$ext = pathinfo($path, PATHINFO_EXTENSION);
-	# 	if ($ext == 'cfg') {
-	# 		CollectProjects($path, $configurations, $commands_txt);
-	# 	}
-	# 	else {
-	# 		CheckAddProject($path, $configurations, $commands_txt);
-	# 	}
-	# }
 }
 
 build_cfg() {
     build_cfg="$1"
-    ide="$2"
-    build_configs="$3"
-    platform="$4"
+    configs="$2"
+    platform="$3"
+    ide="$4"
 
     echo "# Processing: \"$1\"  \"$2\"  \"$3\"  \"$4\" / HDR"
-    CollectProjects "$build_cfg"
+    CollectProjects "$build_cfg" "$configs" "$platform"
+    # projects=$()
+    # project_count=$(wc -l < "${projects[@]}")
+
+    # echo $project_count
+    # echo $projects
     exit
 
     # REPO=$PWD

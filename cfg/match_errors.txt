@@ -12,4 +12,6 @@
 #PHP
 ^Could not open input file: .*$
 ^Parse error: .*$
-#^.* is not recognized as an internal or external command,$
+^.* is not recognized as an internal or external command,$
+#sh
+^.* unary operator expected$

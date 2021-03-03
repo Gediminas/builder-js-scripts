@@ -62,8 +62,8 @@ Decorate () {
   # ERROR
   for match in "${errors[@]}"; do
     if [[ $1 =~ $match ]]; then
-      [ "$forlog" ] && echo -ne "\e[7;49;91m[E] " || echo -ne "E "
-      echo -n "$1"
+      [ "$forlog" ] && echo -ne "\e[1;97;101m[E] " || echo -ne "E "
+      echo -n "$1 "
       [ "$forlog" ] && echo -e  "\e[m"
       return 1
     fi

@@ -51,14 +51,14 @@ fi                                   # SKIP END
 
 echo "# BUILD";
 # # SetEnv('ide_vc19')
-TTL 9 build_cfg "build\_wx.cfg"        "ide_vc19" "DLLRelease" Win32
+TTL 9 build_cfg build/_wx.cfg "DLL Release,Release" Win32 ide_vc19
 
-#temp
-TTL 9 build_cfg "build\_tools.cfg"       "ide_vc19" "Release"    Win32
+# #temp
+# TTL 9 build_cfg "build\_tools.cfg"       "ide_vc19" "Release"    Win32
 
-TTL 9 build_cfg "build\_libraries.cfg" "ide_vc19" "Release"    Win32
-TTL 9 build_cfg "build\wood.cfg"       "ide_vc19" "Release"    Win32
-TTL 9 build_cfg "build\utils.cfg"      "ide_vc19" "Release"    Win32
+# TTL 9 build_cfg "build\_libraries.cfg" "ide_vc19" "Release"    Win32
+# TTL 9 build_cfg "build\wood.cfg"       "ide_vc19" "Release"    Win32
+# TTL 9 build_cfg "build\utils.cfg"      "ide_vc19" "Release"    Win32
 
 # #  SetTTL('1600')
 # # //---------- js files minimization ------
