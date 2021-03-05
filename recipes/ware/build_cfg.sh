@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 CheckAddProjectConfig() {
     path_dsp="$1"
@@ -8,7 +8,7 @@ CheckAddProjectConfig() {
 
     for config in $configs; do
         if [[ ! -f "$path_dsp" ]]; then
-            echo "ERROR: does not exist"
+            echo "ERROR: '$path_dsp' does not exist" >&2
             continue
         fi
          match="<ProjectConfiguration Include=\"$config|$platform\">"
@@ -32,9 +32,15 @@ CollectProjects() {
     readarray -t lines<"$build_cfg"
 
     for line in "${lines[@]}"; do
-        # line=${line%%*(  \r)}
-        if [[ "$line" == $'\r' ]]; then
-           continue
+        line=${line//[\ $'\r']}
+        if [[ -z "$line" ]]; then
+           continue # Skip empty lines
+        fi
+        if [[ $str =~ ^# ]]; then
+           continue # Skip commented lines
+        fi
+        if [[ $str =~ ^// ]]; then
+           continue # Skip commented lines
         fi
         path=$(realpath --no-symlinks "$ROOT/$line")
         if [[ $path =~ ".cfg" ]]; then
@@ -52,7 +58,8 @@ build_cfg() {
     ide="$4"
 
     echo "# Processing: \"$1\"  \"$2\"  \"$3\"  \"$4\" / HDR"
-    CollectProjects "$build_cfg" "$configs" "$platform"
+    projects=$(CollectProjects "$build_cfg" "$configs" "$platform")
+    echo $projects
     # projects=$()
     # project_count=$(wc -l < "${projects[@]}")
 
