@@ -1,38 +1,37 @@
 #!/usr/bin/env bash
 
-CheckAddProjectConfig() {
-    path_dsp="$1"
-    configs="$2"
-    platform="$3"
+__matching_project_data() {
+    local path_dsp="$1"
+    local configs="$2"
+    local platform="$3"
     IFS=, configs=("${configs[@]}")
-
     for config in $configs; do
         if [[ ! -f "$path_dsp" ]]; then
             echo "ERROR: '$path_dsp' does not exist" >&2
             continue
         fi
-         match="<ProjectConfiguration Include=\"$config|$platform\">"
-
-         content=$(grep "$match" < "$path_dsp")
-         if [ -n "$content" ]; then
-             echo "$path_dsp|$config|$platform"
-         fi
+        local needle="<ProjectConfiguration Include=\"$config|$platform\">"
+        local found=$(grep "$needle" < "$path_dsp")
+        if [[ -n $found ]]; then
+            echo "      $path_dsp|$config|$platform"
+        fi
     done
 }
 
-CollectProjects() {
-    build_cfg="$1"
-    configs="$2"
-    platform="$3"
-
+__project_list() {
+    local build_cfg="$1"
+    echo "FILE: $build_cfg"
+    local configs="$2"
+    local platform="$3"
     local build_cfg=$(realpath --no-symlinks $1)
     local ROOT="${build_cfg%[/\\]*}"
-    # local ROOT=$(dirname "$build_cfg")
-
-    readarray -t lines<"$build_cfg"
-
-    for line in "${lines[@]}"; do
+    local lines
+    readarray -t lines < "$build_cfg"
+    echo "CONT: '$lines'"
+    lines="${lines[@]}"
+    for line in $lines; do
         line=${line//[\ $'\r']}
+        echo "TRUN: '$line'"
         if [[ -z "$line" ]]; then
            continue # Skip empty lines
         fi
@@ -44,27 +43,38 @@ CollectProjects() {
         fi
         path=$(realpath --no-symlinks "$ROOT/$line")
         if [[ $path =~ ".cfg" ]]; then
-            CollectProjects "$path" "$configs" "$platform"
+            __project_list "$path" "$configs" "$platform"
         else
-            CheckAddProjectConfig "$path" "$configs" "$platform"
+            __matching_project_data "$path" "$configs" "$platform"
         fi
     done
 }
 
 build_cfg() {
-    build_cfg="$1"
-    configs="$2"
-    platform="$3"
-    ide="$4"
+    local build_cfg="$1"
+    local configs="$2"
+    local platform="$3"
+    local ide="$4"
 
-    echo "# Processing: \"$1\"  \"$2\"  \"$3\"  \"$4\" / HDR"
-    projects=$(CollectProjects "$build_cfg" "$configs" "$platform")
-    echo $projects
-    # projects=$()
-    # project_count=$(wc -l < "${projects[@]}")
+    echo "# Processing: \"$1\"  \"$2\"  \"$3\"  \"$4\""
 
-    # echo $project_count
-    # echo $projects
+    __project_list "$build_cfg" "$configs" "$platform"
+    exit
+
+    projects=$(__project_list "$build_cfg" "$configs" "$platform")
+
+    IFS=$'\n' projects=("${projects[@]}")
+
+    for project in $projects; do
+        echo "PROJ: $project"
+    done
+
+    # project_count=$(echo "${projects[@]}" | wc -l)
+    project_count=$(echo "${projects[@]}" | wc -l)
+    echo "! Building $project_count project(s)"
+
+
+
     exit
 
     # REPO=$PWD
@@ -79,7 +89,7 @@ build_cfg() {
 
     # cd ../../../bin
     while IFS=$'\r\n' read -r generation_path || [[ -n $generation_path ]]; do
-        echo "$generation_path"
+        echo "GEN: $generation_path"
         # cd "$generation_path" || continue
 
         # echo ">> cmake \"$generation_path\" -G \"$generator\" -A \"$architecture\""
