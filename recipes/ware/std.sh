@@ -42,12 +42,10 @@ PrintSystemInfo () {
 TTL () {
     local -i m=$1; shift
 
-    echo -n ">> "
+    echo -ne "\n>> "
     for arg in "${@}"; do echo -n "\"$arg\" "; done
     echo " [TTL=${m}m]"
-
     "$@" &
-
     local -i pid=$!
     local -i span=0
     local -i s=$((m * 60))
@@ -73,7 +71,7 @@ TTL () {
 
 TTX () {
     local -i m=$1; shift
-    $@ &
+    "$@" &
     local -i pid=$!
     local -i span=0
     local -i s=$((m * 60))

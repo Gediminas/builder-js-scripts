@@ -13,25 +13,21 @@ __matching_project_data() {
         local needle="<ProjectConfiguration Include=\"$config|$platform\">"
         local found=$(grep "$needle" < "$path_dsp")
         if [[ -n $found ]]; then
-            echo "      $path_dsp|$config|$platform"
+            echo "$path_dsp|$config|$platform"
         fi
     done
 }
 
 __project_list() {
     local build_cfg="$1"
-    echo "FILE: $build_cfg"
     local configs="$2"
     local platform="$3"
     local build_cfg=$(realpath --no-symlinks $1)
     local ROOT="${build_cfg%[/\\]*}"
     local lines
     readarray -t lines < "$build_cfg"
-    echo "CONT: '$lines'"
-    lines="${lines[@]}"
-    for line in $lines; do
+    for line in ${lines[@]}; do
         line=${line//[\ $'\r']}
-        echo "TRUN: '$line'"
         if [[ -z "$line" ]]; then
            continue # Skip empty lines
         fi
@@ -56,7 +52,7 @@ build_cfg() {
     local platform="$3"
     local ide="$4"
 
-    echo "# Processing: \"$1\"  \"$2\"  \"$3\"  \"$4\""
+    echo "## Processing: \"$1\"  \"$2\"  \"$3\"  \"$4\""
 
     __project_list "$build_cfg" "$configs" "$platform"
     exit
@@ -71,9 +67,7 @@ build_cfg() {
 
     # project_count=$(echo "${projects[@]}" | wc -l)
     project_count=$(echo "${projects[@]}" | wc -l)
-    echo "! Building $project_count project(s)"
-
-
+    # echo "! Building $project_count project(s)"
 
     exit
 
