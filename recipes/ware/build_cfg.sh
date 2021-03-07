@@ -52,13 +52,14 @@ build_cfg() {
     local platform="$3"
     local ide="$4"
 
-    echo "## Processing: \"$1\"  \"$2\"  \"$3\"  \"$4\""
+    echo "## Building: \"$1\"  \"$2\"  \"$3\"  \"$4\""
 
     build_list="$WORK/project_list.txt"
     collect_builds="$REPO/Builder/local/php/collect_builds.php"
 
     build_list=$(realpath --no-symlinks $build_list)
     collect_builds=$(realpath --no-symlinks $collect_builds)
+
     echo "~ build_list: $build_list"
     echo "~ collect_builds: $collect_builds"
 
@@ -68,8 +69,8 @@ build_cfg() {
     # project_list=$(__project_list "$build_cfg" "$configs" "$platform")
 
     #B
-    collect=$RECIPES/ware/build/build_cfg_collect.php
-    TTL 1 php "$collect" "ide_vc19" "$build_cfg" "$configs" "$build_list"
+    collect=$RECIPES/ware/build/collect_projects.php
+    TTL 1 php "$collect" "$build_cfg" "$configs" "$platform" "$build_list"
     readarray -t projects < "$build_list"
 
     TIMER_END=$(date +%s%N)
@@ -78,9 +79,10 @@ build_cfg() {
 
     IFS=$'\n' projects=("${projects[@]}")
 
-    # for project in ${projects[@]}; do
-    #     echo "PROJ: $project"
-    # done
+    for project in ${projects[@]}; do
+        # echo "$project"
+        echo -n ""
+    done
 
     # project_count=$(echo "${projects[@]}" | wc -l)
     project_count=$(echo "${projects[@]}" | wc -l)
