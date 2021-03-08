@@ -1,5 +1,19 @@
 #!/usr/bin/env bash
 
+build()
+{
+    prj=$1
+    config=$2
+    platform=$3
+    build=$4 || "rebuild"
+
+    echo "### building $prj / $config / $platform"
+
+	exe='c:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin\MSBuild.exe'
+
+	$exe "$prj" //m //v:m //t:$build //p:PlatformToolset=v142 //p:Configuration="$config" //p:Platform="$platform"
+}
+
 build_cfg() {
     local build_cfg="$1"
     local configs="$2"
@@ -22,51 +36,16 @@ build_cfg() {
 
         TIMER_END=$(date +%s%N)
         TIMER_SPAN=$(($TIMER_END-$TIMER_START))
+        echo -n "~ span: "
         echo - | awk "{print $TIMER_SPAN/1000000000}"
 
     IFS=$'\n' projects=("${projects[@]}")
 
-    for project in ${projects[@]}; do
-        echo "$project"
+    project_count=${#projects[@]}
+    echo "! Building $project_count project(s)"
+
+    for project_data in ${projects[@]}; do
+        IFS='|' read -ra data <<< "$project_data"
+        build "${data[0]}" "${data[1]}" "${data[2]}" "build"
     done
-
-    # project_count=$(echo "${projects[@]}" | wc -l)
-    project_count=$(echo "${projects[@]}" | wc -l)
-    # echo "! Building $project_count project(s)"
-
-    exit
-
-    # REPO=$PWD
-    # collect_cmake="$REPO/Builder/local/CMake/scripts/php/collect_cmake_files.php"
-    # clean_cmake="$REPO/Builder/local/CMake/scripts/cmake/clean_cmake.cmake"
-
-
-    build_list="$WORK/cmake_paths.txt"
-
-    TTL 1 php "$collect_cmake" "$build_cfg" "$build_list"
-    echo "$build_list"
-
-    # cd ../../../bin
-    while IFS=$'\r\n' read -r generation_path || [[ -n $generation_path ]]; do
-        echo "GEN: $generation_path"
-        # cd "$generation_path" || continue
-
-        # echo ">> cmake \"$generation_path\" -G \"$generator\" -A \"$architecture\""
-        # output=$(cmake "$generation_path" -G "$generator" -A "$architecture";)
-        # echo "$output"
-
-        # # # $pos = strpos($output, "CMakeOutput.log");
-        # # # if( $pos !== false) {
-        # # # 	_log_error("There were errors generating in $generate_path.");
-        # # # }
-        # # # else {
-        # # # 	_log_to($command_log, "$output");
-        # # # }
-
-        # TTL 1 cmake -Dgeneration_path="$generation_path" -P "$clean_cmake"
-
-    done <$build_list
-
-    cd $REPO || exit
 }
-
