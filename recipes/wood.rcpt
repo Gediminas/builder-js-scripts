@@ -22,7 +22,7 @@ if (false); then echo -n ""       # SKIP START
 
 echo "# GIT GET"
 TTL 1 git_get git@vilkas:MxKozijn.git . master --progress --recursive --depth=1
-TTL 1 . get_submodules.sh --progress --recursive --depth=1
+TTL 1 . get_submodules.sh --progress --recursive --depth=1 --clean --quiet
 
 echo "# GIT HASH"
 HASH=$(TTX 1 git rev-parse --short HEAD)
@@ -45,62 +45,79 @@ po2mo "$REPO/Wood/www_desktop/locale/nl_NL/LC_MESSAGES"
 rm -vf Wood/www_desktop/locale/nl_NL/LC_MESSAGES/pvc_www.po
 rm -vf Wood/www_desktop/locale/en_NL/LC_MESSAGES/pvc_www.po
 
+echo "# BUILD";
+TTX 10 build_cfg build/_wx.cfg        "DLL Release,Release" Win32 vc19
+TTX 20 build_cfg build/_libraries.cfg Release Win32 vc19
+TTX 20 build_cfg build/wood.cfg       Release Win32 vc19
+TTX 1  build_cfg build/utils.cfg      Release Win32 vc19
+
 #################################################
 fi                                   # SKIP END
 #################################################
 
-echo "# BUILD";
-TTX 9 build_cfg build/_wx.cfg  "DLL Release,Release" Win32 vc19
-TTX 9 build_cfg build/wood.cfg  Release Win32 vc19
-TTX 9 build_cfg build/utils.cfg Release Win32 vc19
+TTX 1  build_cfg build/_at.cfg        ReleaseAT Win32 vc19
 
-# #  SetTTL('1600')
-# # //---------- js files minimization ------
-# # > cd Wood
-# # > rd /s /q PVCbin
-# # > cmd /c git clone git@vilkas:PVCbin.git
-# # > cd PVCbin
-# # > cd www_desktop_pack
-# # > pack.bat
-# # > cd ..
-# # > cd ..
-# # > cd ..
+#  SetTTL('1600')
+# //---------- js files minimization ------
+# > cd Wood
+# > rd /s /q PVCbin
+# > cmd /c git clone git@vilkas:PVCbin.git
+# > cd PVCbin
+# > cd www_desktop_pack
+# > pack.bat
+# > cd ..
+# > cd ..
+# > cd ..
+
 
 # # //---------- COLLECT DISTRIBUTION ------
 
-# # DirCopy('@root@/Libraries/wx/lib/vc_dll',          '@root@/bin',          '*.dll')
-# # DirCopy('@root@/Libraries/Stingray/lib',           '@root@/bin',          '*.dll')
-# # DirCopy('@root@/Libraries/CGAL/auxiliary/gmp/lib', '@root@/bin',          '*.dll')
-# # DirCopy('@root@/bin',                              '@temp@/distr/bin',    '*.dll')
-# # DirCopy('@root@/bin',                              '@temp@/distr/bin',    '*.exe')
-# # DirCopy('@root@/bin',                              '@temp@/distr/bin',    '*.pak')
-# # DirCopy('@root@/bin',                              '@temp@/distr/bin',    '*.bin')
-# # DirCopy('@root@/bin',                              '@temp@/distr/bin',    '*.dat')
-# # DirCopy('@root@/bin',                              '@temp@/distr/bin',    '*.manifest')
-# # DirCopy('@root@/database',                         '@temp@/distr/database')
-# # DirCopy('@root@/Language',                         '@temp@/distr/Language', '*.mo')
-# # DirCopy('@root@/Wood/WEB',                         '@temp@/distr/Wood/WEB')
-# # DirCopy('@root@/Wood/img',                         '@temp@/distr/Wood/img')
-# # DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.ini')
-# # DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.rgt')
-# # DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.flt')
-# # DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.dgt')
-# # DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.mrp')
-# # DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.xml')
-# # DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.dxf')
-# # DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.rtl')
-# # DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.zip')
-# # DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.dpe')
-# # DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.dtl')
-# # DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.txt')
-# # //DirCopy('@root@/Wood/settings',                  '@temp@/distr/Wood/settings', '*.mxk')
-# # //DirCopy('@root@/Wood/settings',                  '@temp@/distr/Wood/settings', '*.lib')
-# # //DirCopy('@root@/Wood/settings',                  '@temp@/distr/Wood/settings', '*.wkv')
-# # DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.bmp')
-# # DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.reg')
-# # DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.zipex')
-# # DirCopy('@root@/Wood/settings',                    '@temp@/distr/Wood/settings', '*.html')
-# # DirCopy('@root@/Wood/www_desktop',                 '@temp@/distr/Wood/www_desktop')
+echo "# COLLECT DISTR"
+echo ">> Filtered copy to $WORK/distr/"
+mkdir -p "$WORK/distr"
+
+shopt -s globstar  # enable recursive globs
+
+mkdir -p "$WORK/distr"
+mkdir -p "$WORK/distr/bin"
+cp -v Libraries/wx/lib/vc_dll/*.dll              "$WORK/distr/bin/"
+cp -v Libraries/Stingray/lib/*.dll               "$WORK/distr/bin/"
+cp -v Libraries/CGAL/auxiliary/gmp/lib/*.dll     "$WORK/distr/bin/"
+cp -vR --parents bin/**/*.dll                    "$WORK/distr/"
+cp -vR --parents bin/**/*.exe                    "$WORK/distr/"
+cp -vR --parents bin/**/*.pak                    "$WORK/distr/"
+cp -vR --parents bin/**/*.bin                    "$WORK/distr/"
+cp -vR --parents bin/**/*.dat                    "$WORK/distr/"
+cp -vr database                                  "$WORK/distr/database"
+cp -vR --parents Language/**/*.mo                "$WORK/distr/"
+cp -vr --parents Wood/WEB                        "$WORK/distr/"
+cp -vr --parents Wood/img                        "$WORK/distr/"
+
+mkdir -p "$WORK/distr/Wood/settings"
+cp -v --parents Wood/Settings/**/*.ini                      "$WORK/distr/"
+cp -v --parents Wood/Settings/**/*.rgt                      "$WORK/distr/"
+cp -v --parents Wood/Settings/**/*.flt                      "$WORK/distr/"
+cp -v --parents Wood/Settings/**/*.dgt                      "$WORK/distr/"
+cp -v --parents Wood/Settings/**/*.mrp                      "$WORK/distr/"
+cp -v --parents Wood/Settings/**/*.xml                      "$WORK/distr/"
+cp -v --parents Wood/Settings/**/*.dxf                      "$WORK/distr/"
+cp -v --parents Wood/Settings/**/*.rtl                      "$WORK/distr/"
+cp -v --parents Wood/Settings/**/*.dpe                      "$WORK/distr/"
+cp -v --parents Wood/Settings/**/*.dtl                      "$WORK/distr/"
+cp -v --parents Wood/Settings/**/*.txt                      "$WORK/distr/"
+cp -v --parents Wood/Settings/**/*.bmp                      "$WORK/distr/"
+cp -v --parents Wood/Settings/**/*.html                     "$WORK/distr/"
+
+# cp -vR --parents bin/**/*.manifest             "$WORK/distr/"
+# cp -v --parents Wood/Settings/**/*.mxk                     "$WORK/distr/"
+# cp -v --parents Wood/Settings/**/*.lib                     "$WORK/distr/"
+# cp -v --parents Wood/Settings/**/*.wkv                     "$WORK/distr/"
+# cp -v --parents Wood/Settings/**/*.zip                      "$WORK/distr/"
+# cp -v --parents Wood/Settings/**/*.reg                      "$WORK/distr/"
+# cp -v --parents Wood/Settings/**/*.zipex                    "$WORK/distr/"
+
+
+# # cp -v --parents Wood/www_desktop                         "$WORK/distr/Wood/www_desktop"
 
 # # FileCopy('@temp@/git.log',                        '@temp@/distr/git.log')
 

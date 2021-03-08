@@ -49,6 +49,9 @@ if (!is_file($root_build_cfg)) {
 	return;
 }
 
-unlink("$out");
+if (is_file("$out")) {
+	unlink("$out");
+}
+
 CollectProjectsRecursive($root_build_cfg, $configs, $platform, $out);
 ?>

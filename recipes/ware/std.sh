@@ -34,9 +34,19 @@ PrintFolders () {
 PrintSystemInfo () {
     echo "! System Info:"
     echo -n "! * "
+    which php
+    echo -n "!   * "
     php --version | head -n 1
+
     echo -n "! * "
+    which cmake
+    echo -n "!   * "
     cmake --version | head -n 1
+
+    # echo -n "! * "
+    # which rsync
+    # echo -n "!   * "
+    # rsync --version | head -n 1
 }
 
 TTL () {
