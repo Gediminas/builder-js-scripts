@@ -53,7 +53,8 @@ TTL () {
     local -i m=$1; shift
 
     echo -ne "\n>> "
-    for arg in "${@}"; do echo -n "\"$arg\" "; done
+    # for arg in "${@}"; do echo -n "\"$arg\" "; done
+    echo -n "${@}"
     echo " [TTL=${m}m]"
     "$@" &
     local -i pid=$!

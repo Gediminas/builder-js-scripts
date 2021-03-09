@@ -17,3 +17,5 @@
 ^.* unary operator expected$
 ^cp: -r not specified
 ^cp: target .* is not a directory$
+#Reports
+Error: .*$

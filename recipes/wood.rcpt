@@ -51,10 +51,6 @@ TTX 20 build_cfg build/_libraries.cfg Release Win32 vc19
 TTX 20 build_cfg build/wood.cfg       Release Win32 vc19
 TTX 1  build_cfg build/utils.cfg      Release Win32 vc19
 
-#################################################
-fi                                   # SKIP END
-#################################################
-
 TTX 1  build_cfg build/_at.cfg        ReleaseAT Win32 vc19
 
 #  SetTTL('1600')
@@ -70,66 +66,59 @@ TTX 1  build_cfg build/_at.cfg        ReleaseAT Win32 vc19
 # > cd ..
 
 
-# # //---------- COLLECT DISTRIBUTION ------
-
 echo "# COLLECT DISTR"
 echo ">> Filtered copy to $WORK/distr/"
-mkdir -p "$WORK/distr"
+TTL 1 mkdir -p "$WORK/distr"
 
 shopt -s globstar  # enable recursive globs
 
-mkdir -p "$WORK/distr"
-mkdir -p "$WORK/distr/bin"
-cp -v Libraries/wx/lib/vc_dll/*.dll              "$WORK/distr/bin/"
-cp -v Libraries/Stingray/lib/*.dll               "$WORK/distr/bin/"
-cp -v Libraries/CGAL/auxiliary/gmp/lib/*.dll     "$WORK/distr/bin/"
-cp -vR --parents bin/**/*.dll                    "$WORK/distr/"
-cp -vR --parents bin/**/*.exe                    "$WORK/distr/"
-cp -vR --parents bin/**/*.pak                    "$WORK/distr/"
-cp -vR --parents bin/**/*.bin                    "$WORK/distr/"
-cp -vR --parents bin/**/*.dat                    "$WORK/distr/"
-cp -vr database                                  "$WORK/distr/database"
-cp -vR --parents Language/**/*.mo                "$WORK/distr/"
-cp -vr --parents Wood/WEB                        "$WORK/distr/"
-cp -vr --parents Wood/img                        "$WORK/distr/"
+TTL 1 mkdir -p "$WORK/distr"
+TTL 1 mkdir -p "$WORK/distr/bin"
+TTL 1 cp -v Libraries/wx/lib/vc_dll/*.dll          "$WORK/distr/bin/"
+TTL 1 cp -v Libraries/Stingray/lib/*.dll           "$WORK/distr/bin/"
+TTL 1 cp -v Libraries/CGAL/auxiliary/gmp/lib/*.dll "$WORK/distr/bin/"
+TTL 1 cp -vR --parents bin/**/*.dll                "$WORK/distr/"
+TTL 1 cp -vR --parents bin/**/*.exe                "$WORK/distr/"
+TTL 1 cp -vR --parents bin/**/*.pak                "$WORK/distr/"
+TTL 1 cp -vR --parents bin/**/*.bin                "$WORK/distr/"
+TTL 1 cp -vR --parents bin/**/*.dat                "$WORK/distr/"
+TTL 1 cp -vR --parents database                    "$WORK/distr/"
+TTL 1 cp -vR --parents Language/**/*.mo            "$WORK/distr/"
+TTL 1 cp -vr --parents Wood/WEB                    "$WORK/distr/"
+TTL 1 cp -vr --parents Wood/img                    "$WORK/distr/"
 
-mkdir -p "$WORK/distr/Wood/settings"
-cp -v --parents Wood/Settings/**/*.ini                      "$WORK/distr/"
-cp -v --parents Wood/Settings/**/*.rgt                      "$WORK/distr/"
-cp -v --parents Wood/Settings/**/*.flt                      "$WORK/distr/"
-cp -v --parents Wood/Settings/**/*.dgt                      "$WORK/distr/"
-cp -v --parents Wood/Settings/**/*.mrp                      "$WORK/distr/"
-cp -v --parents Wood/Settings/**/*.xml                      "$WORK/distr/"
-cp -v --parents Wood/Settings/**/*.dxf                      "$WORK/distr/"
-cp -v --parents Wood/Settings/**/*.rtl                      "$WORK/distr/"
-cp -v --parents Wood/Settings/**/*.dpe                      "$WORK/distr/"
-cp -v --parents Wood/Settings/**/*.dtl                      "$WORK/distr/"
-cp -v --parents Wood/Settings/**/*.txt                      "$WORK/distr/"
-cp -v --parents Wood/Settings/**/*.bmp                      "$WORK/distr/"
-cp -v --parents Wood/Settings/**/*.html                     "$WORK/distr/"
+TTL 1 mkdir -p "$WORK/distr/Wood/settings"
+TTL 1 cp -v --parents Wood/Settings/**/*.ini       "$WORK/distr/"
+TTL 1 cp -v --parents Wood/Settings/**/*.rgt       "$WORK/distr/"
+TTL 1 cp -v --parents Wood/Settings/**/*.flt       "$WORK/distr/"
+TTL 1 cp -v --parents Wood/Settings/**/*.dgt       "$WORK/distr/"
+TTL 1 cp -v --parents Wood/Settings/**/*.mrp       "$WORK/distr/"
+TTL 1 cp -v --parents Wood/Settings/**/*.xml       "$WORK/distr/"
+TTL 1 cp -v --parents Wood/Settings/**/*.dxf       "$WORK/distr/"
+TTL 1 cp -v --parents Wood/Settings/**/*.rtl       "$WORK/distr/"
+TTL 1 cp -v --parents Wood/Settings/**/*.dpe       "$WORK/distr/"
+TTL 1 cp -v --parents Wood/Settings/**/*.dtl       "$WORK/distr/"
+TTL 1 cp -v --parents Wood/Settings/**/*.txt       "$WORK/distr/"
+TTL 1 cp -v --parents Wood/Settings/**/*.bmp       "$WORK/distr/"
+TTL 1 cp -v --parents Wood/Settings/**/*.html      "$WORK/distr/"
+TTL 1 cp -vr --parents Wood/www_desktop            "$WORK/distr/"
 
-# cp -vR --parents bin/**/*.manifest             "$WORK/distr/"
-# cp -v --parents Wood/Settings/**/*.mxk                     "$WORK/distr/"
-# cp -v --parents Wood/Settings/**/*.lib                     "$WORK/distr/"
-# cp -v --parents Wood/Settings/**/*.wkv                     "$WORK/distr/"
-# cp -v --parents Wood/Settings/**/*.zip                      "$WORK/distr/"
-# cp -v --parents Wood/Settings/**/*.reg                      "$WORK/distr/"
-# cp -v --parents Wood/Settings/**/*.zipex                    "$WORK/distr/"
-
-
-# # cp -v --parents Wood/www_desktop                         "$WORK/distr/Wood/www_desktop"
-
+# cp -vR --parents bin/**/*.manifest               "$WORK/distr/"
+# cp -v --parents Wood/Settings/**/*.mxk           "$WORK/distr/"
+# cp -v --parents Wood/Settings/**/*.lib           "$WORK/distr/"
+# cp -v --parents Wood/Settings/**/*.wkv           "$WORK/distr/"
+# cp -v --parents Wood/Settings/**/*.zip           "$WORK/distr/"
+# cp -v --parents Wood/Settings/**/*.reg           "$WORK/distr/"
+# cp -v --parents Wood/Settings/**/*.zipex         "$WORK/distr/"
 # # FileCopy('@temp@/git.log',                        '@temp@/distr/git.log')
-
 # # >unlink '@temp@/distr/Wood/www_desktop/debug_mode'
 
-# # //---------- WEBMANAGER ------
 
+# # //---------- WEBMANAGER ------
 # # > REM WebManager
 # # > cd @root@/WebManager
 # # > call npm install
 # # > call sh build.sh
-
 # # FileCopy('@root@/WebManager/bin/MatrixService.exe', '@temp@/distr/WebManager/bin/MatrixService.exe')
 # # FileCopy('@root@/WebManager/dist/WebManager.exe',   '@temp@/distr/WebManager/WebManager.exe')
 # # DirCopy('@root@/WebManager/dist',                   '@temp@/distr/WebManager',        '*.sh')
@@ -137,24 +126,20 @@ cp -v --parents Wood/Settings/**/*.html                     "$WORK/distr/"
 # # DirCopy('@root@/WebManager/dist/config',            '@temp@/distr/WebManager/config')
 # # DirCopy('@root@/WebManager/dist/prebuilds',         '@temp@/distr/WebManager/prebuilds')
 
-
-# # //TEMP - Remove when #39781 is fixed
-# # //FileCopy('@root@/WebManager/bin/MatrixService.exe', '@temp@/distr/WebManager/bin/nssm.exe')
-# # //FileCopy('@root@/WebManager/bin/MatrixService.exe', '@root@/WebManager/bin/nssm.exe')
-
-
 # # //---------- COPY MAP FILES TO DISTR ----------
-
 # # > md "@temp@\distr\map"
 # # PHP('@root@/Utils/copy_files_recursive.php', '@root@', '@temp@\distr\map', 'map')
 # # PHP('@root@/Utils/copy_files_recursive.php', '@root@', '@temp@\distr\map', 'pdb')
 
 
-# # //---------- GENERATE REPORTS ----------
+echo "# Generate reports"
+php Utils/BuildReports.php Wood/Reports/DXF/WKV/Result      "$WORK/distr/Reports/WKV"
+php Utils/BuildReports.php Wood/Reports/DXF/WKV/Shapes      "$WORK/distr/Reports/WKV"
+php Utils/BuildReports.php Wood/Reports/DXF/WKV/ShapeResult "$WORK/distr/Reports/WKV"
 
-# # PHP('@root@/Utils/BuildReports.php', '@root@/Wood/Reports/DXF/WKV/Result',      '@temp@/distr/Reports/WKV')
-# # PHP('@root@/Utils/BuildReports.php', '@root@/Wood/Reports/DXF/WKV/Shapes',      '@temp@/distr/Reports/WKV')
-# # PHP('@root@/Utils/BuildReports.php', '@root@/Wood/Reports/DXF/WKV/ShapeResult', '@temp@/distr/Reports/WKV')
+#################################################
+fi                                   # SKIP END
+#################################################
 
 
 # # //---------- CLEAN-UP, COMPRESS, PUT ON FTP----------
