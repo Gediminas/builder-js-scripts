@@ -5,4 +5,4 @@
 ##DB does not exist
 ^npm WARN .*$
 ^found [0-9]+ vulnerabilities \(
-^Notice: Undefined variable: .*$
+^Notice: .*$
