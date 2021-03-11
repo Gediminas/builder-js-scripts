@@ -19,3 +19,5 @@
 ^cp: target .* is not a directory$
 #Reports
 Error: .*$
+#CheckDep
+^LINK: extra operand .*$

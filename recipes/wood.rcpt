@@ -7,6 +7,7 @@ source "${RECIPES}"/ware/std.sh
 source "${RECIPES}"/ware/git_get.sh
 source "${RECIPES}"/ware/build_cfg.sh
 source "${RECIPES}"/ware/build_cmake.sh
+source "${RECIPES}"/ware/check_dep.sh
 source "${RECIPES}"/ware/po2mo.sh
 
 echo "# INITIALIZE"
@@ -144,7 +145,8 @@ fi                                   # SKIP END
 
 # # //---------- CLEAN-UP, COMPRESS, PUT ON FTP----------
 
-# # CheckDep('@temp@/distr/bin', 'MatrixKozijn.exe ShapeManager.exe MxK_Convert.exe MxKUserFileConverter.exe 7za.exe MxKDongle.dll SQLite2mdb.exe ExportDXFApp.exe MsSQLtoSqlite.exe')
+check_dep "$WORK/distr/bin" "MatrixKozijn.exe ShapeManager.exe MxK_Convert.exe MxKUserFileConverter.exe 7za.exe MxKDongle.dll SQLite2mdb.exe ExportDXFApp.exe MsSQLtoSqlite.exe"
+
 
 # # CheckLng('@temp@/distr/Language', '@temp@/distr/bin')
 
