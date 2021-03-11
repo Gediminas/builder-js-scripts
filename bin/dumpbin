@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+RECIPES="${BASH_SOURCE%[/\\]*}"
+"${RECIPES}"/dumpbin-10.0/dumpbin "$@"
