@@ -14,10 +14,10 @@ check_dep() {
 	dll="$distr_bin_path/*.dll"
     dep_txt="$WORK/dependencies.txt"
 
-	TTL 1 dumpbin //DEPENDENTS "$exe" "$dll" > "$dep_txt"
+	TTX 1 dumpbin //DEPENDENTS "$exe" "$dll" > "$dep_txt"
     removes=$(php "$WARE"/php/analyze_dependencies.php "$dep_txt" "$preserves" 1)
 
-    echo "removes=$removes"
+    echo "~ removes=$removes"
 
     # //echo "check dir: [$distr_bin_path*]\n";
     # $removes     = dependList($command_log, $worker_id, "$distr_bin_path", "$preserves", 1);
