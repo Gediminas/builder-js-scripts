@@ -5,36 +5,37 @@ function check($fname, $files_list)
 	return stripos($files_list, $fname) >= 1;
 }
 
-function analyze_dependencies($dependencies_path, $preserves, $type, $silent) // 1-remove list; 2-keep list
-{
-	$lines = file($dependencies_path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-
+function load_dependencies($path) {
 	$bin2dep = Array();
-	$stage = 0;
-	$current_bin = "";
-
+	$root = "";
+	$lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 	foreach ($lines as $line) {
 		$line = trim($line);
-        if ($line === "Summary") {
-			break;
-		}
         if (stripos($line, "Dump of file ") === 0) {
 			$fname = basename($line);
-			$bin2dep[$fname] = "";
-			$current_bin = $fname;
-			$bin2dep["$current_bin"] = Array();
-			// echo "! Analyzing $current_bin\n";
+			$root = $fname;
+			$bin2dep["$root"] = Array();
 			continue;
 		}
-		if (!$current_bin ||
+		if (!$root ||
 			$line === "Image has the following dependencies:" ||
 			$line === "\f" ||
 		    stripos($line, "File Type: ") === 0) {
 			continue;
 		}
-		$bin2dep[$current_bin][$line] = 1;
+        if ($line === "Summary") {
+			break;
+		}
+		$bin2dep["$root"][] = $line;
     }
-	var_dump($bin2dep);
+	print_r($bin2dep);
+	return $bin2dep;
+}
+
+function analyze_dependencies($dependencies_path, $preserves, $type, $silent) // 1-remove list; 2-keep list
+{
+	$bin2dep = load_dependencies($dependencies_path);
+
 	return;
 
 	// calculating file dependencies

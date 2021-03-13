@@ -14,7 +14,7 @@ check_dep() {
 	dll="$distr_bin_path/*.dll"
     dep_txt="$WORK/dependencies.txt"
 
-	TTX 1 dumpbin //DEPENDENTS "$exe" "$dll" > "$dep_txt"
+	dumpbin //DEPENDENTS "$exe" "$dll" 1>"$dep_txt"
     removes=$(php "$WARE"/php/analyze_dependencies.php "$dep_txt" "$preserves" 1)
 
     echo -e "~ removes=\n$removes"
