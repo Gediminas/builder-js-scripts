@@ -17,7 +17,7 @@ check_dep() {
 	TTX 1 dumpbin //DEPENDENTS "$exe" "$dll" > "$dep_txt"
     removes=$(php "$WARE"/php/analyze_dependencies.php "$dep_txt" "$preserves" 1)
 
-    echo "~ removes=$removes"
+    echo -e "~ removes=\n$removes"
 
     # //echo "check dir: [$distr_bin_path*]\n";
     # $removes     = dependList($command_log, $worker_id, "$distr_bin_path", "$preserves", 1);

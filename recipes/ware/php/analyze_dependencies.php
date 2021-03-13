@@ -7,57 +7,34 @@ function check($fname, $files_list)
 
 function analyze_dependencies($dependencies_path, $preserves, $type, $silent) // 1-remove list; 2-keep list
 {
-	// $preserves = " ".$preserves; // comparing specific
-
 	$lines = file($dependencies_path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-	//parsing
-	$bin2dep = array();
+	$bin2dep = Array();
 	$stage = 0;
 	$current_bin = "";
 
 	foreach ($lines as $line) {
 		$line = trim($line);
+        if ($line === "Summary") {
+			break;
+		}
         if (stripos($line, "Dump of file ") === 0) {
 			$fname = basename($line);
 			$bin2dep[$fname] = "";
 			$current_bin = $fname;
-
-			echo "! $current_bin\n";
+			$bin2dep["$current_bin"] = Array();
+			// echo "! Analyzing $current_bin\n";
 			continue;
 		}
-
-		if (!$current_bin) {
+		if (!$current_bin ||
+			$line === "Image has the following dependencies:" ||
+			$line === "\f" ||
+		    stripos($line, "File Type: ") === 0) {
 			continue;
 		}
-
-		if (stripos($line, "File Type: ") === 0) {
-			continue;
-		}
-
-        if ($line === "Image has the following dependencies:") {
-			continue;
-		}
-
-        if ($line === "\f") {
-			continue;
-		}
-
-		echo "$line\n";
-
-		// if (strlen($line) <4) $stage--;
-		// if (stripos($line, "") ==1) $stage = 0;
-
-		// if (stripos($line, "Image has the following dependencies")>=1) {
-		// 	$stage = 2;
-		// }
-		// else if (($stage > 0) && (strlen($line) >4)) {// parsing stage and not empty line
-		// 	$dep_fname = substr($line, 4, strripos($line,'dll')-1);		// put dependent dlls` names to array
-		// 	@$bin2dep[$current_bin] = $dep_fname.";".$bin2dep[$current_bin];
-		// }
+		$bin2dep[$current_bin][$line] = 1;
     }
-	// end of data parsing
-	// print_r($bin2dep);
+	var_dump($bin2dep);
 	return;
 
 	// calculating file dependencies
