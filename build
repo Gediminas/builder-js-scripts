@@ -91,7 +91,7 @@ TeeTimeDecor () {
         if [ "$halt" == "1" ]; then
           echo "$(date '+%Y-%m-%d %H:%M:%S') [HALT]" >> "$1"
           echo -e "\n\e[7;49;91m[HALT]\e[m"
-          (sleep 1; kill -s TERM 0)&  # delay killing to get whole error message
+          (sleep 2; kill -s TERM 0)&  # delay killing to get whole error message
         fi
         ;;
       *)
