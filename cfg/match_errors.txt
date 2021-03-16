@@ -10,6 +10,7 @@
 .*: The system cannot find the file specified\.$
 ^Compiling .+\.\.\. The filename, directory name, or volume label syntax is incorrect.$
 #PHP
+^Fatal error: .*$
 ^Could not open input file: .*$
 ^Parse error: .*$
 ^.* is not recognized as an internal or external command,$

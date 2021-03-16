@@ -15,7 +15,8 @@ check_dep() {
     dep_txt="$WORK/dependencies.txt"
 
 	dumpbin //DEPENDENTS "$exe" "$dll" 1>"$dep_txt"
-    removes=$(php "$WARE"/php/analyze_dependencies.php "$dep_txt" "$preserves" 1)
+    TTL 1 php "$WARE"/php/analyze_dependencies.php "$dep_txt" "$preserves" 1
+    # removes=$(TTL 1 php "$WARE"/php/analyze_dependencies.php "$dep_txt" "$preserves" 1)
 
     echo -e "~ removes=\n$removes"
 

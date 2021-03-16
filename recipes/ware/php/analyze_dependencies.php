@@ -1,11 +1,5 @@
 <?php
 
-// $_system_dll = 'KERNEL32.dll MSVCRT.dll comdlg32.dll ole32.dll COMCTL32.dll SHELL32.dll '.
-// 			   'OLEAUT32.dll ADVAPI32.dll USER32.dll GDI32.dll MFC42.DLL MSVCP60.dll '.
-// 			   'WINSPOOL.DRV WS2_32.dll oledlg.dll ODBC32.dll WINMM.dll RPCRT4.dll '.
-// 			   'CRPE32.dll SHLWAPI.dll MSIMG32.dll WSOCK32.dll GDIPLUS.dll ATL.DLL '.
-// 			   'MSCOREE.DLL UXTHEME.DLL';
-
 function check($fname, $files_list)
 {
 	return stripos($files_list, $fname) >= 1;
@@ -25,8 +19,11 @@ function load_dependencies($path) {
 		}
 		if (!$root ||
 			$line === "Image has the following dependencies:" ||
+			$line === "Image has the following delay load dependencies:" ||
 			$line === "\f" ||
-		    stripos($line, "File Type: ") === 0) {
+		    stripos($line, "File Type: ") === 0 ||
+		    stripos($line, "LINK : ") === 0
+		) {
 			continue;
 		}
         if ($line === "Summary") {
@@ -38,28 +35,46 @@ function load_dependencies($path) {
 	return $bin2dep;
 }
 
+function collect_final_bins_recursive($bin2deps, $bin, &$finals) {
+	if (isset($bin2deps[$bin])) {
+		// echo "! $bin\n";
+		foreach ($bin2deps[$bin] as $dep) {
+			collect_final_bins_recursive($bin2deps, $dep, $finals);
+		}
+	}
+	else {
+		// echo "~ $bin\n";
+		$finals[$bin] = 1;
+	}
+}
+
 function analyze_dependencies($dependencies_path, $preserves, $type) // 1-remove list; 2-keep list
 {
 	$bin2deps = load_dependencies($dependencies_path);
-	$tocheckbins = explode(';', $preserves);
+	$bins     = explode(';', $preserves);
+	$finals   = Array();
 
-	$exist = Array();
-	while (count($tocheckbins)) {
-		$tocheckbin = $tocheckbins[0];
-		echo "! $tocheckbin\n";
+	foreach ($bins as $bin) {
+		collect_final_bins_recursive($bin2deps, $bin, $finals);
+	}
 
-		$deps = $bin2deps[$tocheckbin];
-		if ($deps) {
-			// $tocheckbins = array_merge($tocheckbins, $deps);
-			foreach ($deps as $dep) {
-				echo "$dep ";
-			}
-		}
-		echo "\n";
+	$finals = array_keys($finals);
+	sort($finals);
 
-		// if ($exist[$tocheckbin]) {
-			array_shift($tocheckbins);
-			// continue;
+	// $system_dll = 'KERNEL32.dll MSVCRT.dll comdlg32.dll ole32.dll COMCTL32.dll SHELL32.dll '.
+	// 			'OLEAUT32.dll ADVAPI32.dll USER32.dll GDI32.dll MFC42.DLL MSVCP60.dll '.
+	// 			'WINSPOOL.DRV WS2_32.dll oledlg.dll ODBC32.dll WINMM.dll RPCRT4.dll '.
+	// 			'CRPE32.dll SHLWAPI.dll MSIMG32.dll WSOCK32.dll GDIPLUS.dll ATL.DLL '.
+	// 			'MSCOREE.DLL UXTHEME.DLL';
+
+	foreach ($finals as $final) {
+
+		echo "$final;";
+
+		// if (stripos($system_dll, $final) === 0) {
+		// }
+		// else {
+		// 	echo "$final\n";
 		// }
 	}
 
@@ -130,7 +145,7 @@ function analyze_dependencies($dependencies_path, $preserves, $type) // 1-remove
 
 $dep_data_path = $argv[1];
 $preserves = $argv[2];
-$type = $argv[3]; // 1-remove list; 2-keep list
+$type = isset($argv[3]) ? $argv[3] : 1; // 1-remove list; 2-keep list
 $list = analyze_dependencies($dep_data_path, $preserves, $type);
 echo "$list";
 
