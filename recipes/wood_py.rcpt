@@ -1,0 +1,6 @@
+#!/usr/bin/env python3
+
+from os import *
+
+
+system('git clone git@vilkas:MxKozijn.git ../repo --progress --recursive --depth=1')
