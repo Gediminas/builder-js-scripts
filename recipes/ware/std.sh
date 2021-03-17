@@ -51,24 +51,33 @@ PrintSystemInfo () {
 
 TTL () {
     local -i m=$1; shift
-
-    OUTPUT=
-    for arg do
+    OUTPUT=""
+    local SILENT=""
+    for arg; do
         shift
-        [ "$arg" = "---output" ] && OUTPUT=1 && continue
+        if [[ "$arg" == "---output" ]]; then
+            OUTPUT="1"
+            continue
+        fi
+        if [[ "$arg" == "---silent" ]]; then
+            SILENT="1"
+            continue
+        fi
         set -- "$@" "$arg"
     done
 
-    echo -ne "\n>> "
-    # for arg in "${@}"; do echo -n "\"$arg\" "; done
-    echo -n "${@}"
-    echo " [TTL=${m}m]"
-
-    if [ -z "$OUTPUT" ]; then
-        "$@" &
-    else
-        ("$@" > "$WORK/tmp_ttl.txt") &
+    if [[ $SILENT == "" ]]; then
+        echo -ne "\n>> "
+        echo -n "${@}"
+        echo " [TTL=${m}m]"
     fi
+
+    if [[ $OUTPUT == "1" ]]; then
+        ("$@" > "$WORK/tmp_ttl.txt") &
+    else
+        "$@" &
+    fi
+
     local -i pid=$!
     local -i span=0
     local -i s=$((m * 60))
@@ -91,78 +100,10 @@ TTL () {
         fi
     done
 
-    if [[ ! -z $OUTPUT ]]; then
+    if [[ $OUTPUT == "1" ]]; then
         OUTPUT=$(cat "$WORK/tmp_ttl.txt")
-        echo ">> OUTPUT: $OUTPUT"
+        if [[ $SILENT == "" ]]; then
+            echo ">> OUTPUT: $OUTPUT"
+        fi
     fi
 }
-
-TTX () {
-    local -i m=$1; shift
-    "$@" &
-    local -i pid=$!
-    local -i span=0
-    local -i s=$((m * 60))
-
-    while kill -0 $pid >/dev/null 2>&1; do
-        sleep 1
-        ((s++))
-        if [ $span -ge $s ]; then
-            echo -e "\nERROR: Timeout ${m}m"
-        fi
-    done
-}
-
-# export -f TTL
-
-# TTLa () {
-#     m=$1; shift
-#     s=$((m * 60))
-#     echo ">> $@  [TTL=${m}m]"
-#     timeout $s $@
-#     ret=$?
-#     case $ret in
-#           0) ;;
-#         124) echo "ERROR: Time Out ${m}m: $@" ;;
-#           *) echo "[WARN] Exit code $ret" ;;
-#     esac
-#     return $ret
-# }
-
-# TTLb () {
-#     local arr=( "$@" )
-#     local timeout="${arr[0]}"
-#     local cmd=( "${arr[@]:1}" )
-
-#     echo "timeout=$timeout"
-#     echo ">> ${cmd[@]}  [TTL=${timeout}s]"
-
-#     (
-#         eval "${cmd[@]}" &
-#         pid=$!
-
-#         echo "child pid: $pid"
-#         trap -- "" SIGTERM
-#         (
-#             sleep "$timeout"
-#             kill "$pid" 2> /dev/null
-#             echo $?
-#         ) &
-#         wait "$pid"
-#     )
-# }
-
-# TTLc () {
-#     trap -- "" SIGTERM
-
-#     local pid=$!
-#     local t=$1
-#     # local s=$((m * 60))
-
-#     (
-#         sleep $t
-#         echo -e "\nERROR: Timeout $t s"
-#         kill $pid
-#     ) &
-#     wait $pid
-# }

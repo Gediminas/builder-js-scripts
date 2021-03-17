@@ -48,12 +48,12 @@ rm -vf Wood/www_desktop/locale/nl_NL/LC_MESSAGES/pvc_www.po
 rm -vf Wood/www_desktop/locale/en_NL/LC_MESSAGES/pvc_www.po
 
 echo "# BUILD";
-TTX 10 build_cfg build/_wx.cfg        "DLL Release,Release" Win32 vc19
-TTX 20 build_cfg build/_libraries.cfg Release Win32 vc19
-TTX 20 build_cfg build/wood.cfg       Release Win32 vc19
-TTX 1  build_cfg build/utils.cfg      Release Win32 vc19
+TTL 10 build_cfg build/_wx.cfg        "DLL Release,Release" Win32 vc19 ---silent
+TTL 20 build_cfg build/_libraries.cfg Release Win32 vc19 ---silent
+TTL 20 build_cfg build/wood.cfg       Release Win32 vc19 ---silent
+TTL 1  build_cfg build/utils.cfg      Release Win32 vc19 ---silent
 
-TTX 1  build_cfg build/_at.cfg        ReleaseAT Win32 vc19
+TTL 1  build_cfg build/_at.cfg        ReleaseAT Win32 vc19 ---silent
 
 #  SetTTL('1600')
 # //---------- js files minimization ------
@@ -135,9 +135,9 @@ TTL 1 cp -vr --parents Wood/www_desktop            "$WORK/distr/"
 
 
 echo "# Generate reports"
-php Utils/BuildReports.php Wood/Reports/DXF/WKV/Result      "$WORK/distr/Reports/WKV"
-php Utils/BuildReports.php Wood/Reports/DXF/WKV/Shapes      "$WORK/distr/Reports/WKV"
-php Utils/BuildReports.php Wood/Reports/DXF/WKV/ShapeResult "$WORK/distr/Reports/WKV"
+TTL 1 php Utils/BuildReports.php Wood/Reports/DXF/WKV/Result      "$WORK/distr/Reports/WKV"
+TTL 1 php Utils/BuildReports.php Wood/Reports/DXF/WKV/Shapes      "$WORK/distr/Reports/WKV"
+TTL 1 php Utils/BuildReports.php Wood/Reports/DXF/WKV/ShapeResult "$WORK/distr/Reports/WKV"
 
 #################################################
 fi                                   # SKIP END
