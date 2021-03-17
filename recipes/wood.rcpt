@@ -26,7 +26,8 @@ TTL 1 git_get git@vilkas:MxKozijn.git . master --progress --recursive --depth=1
 TTL 1 . get_submodules.sh --progress --recursive --depth=1 --clean --quiet
 
 echo "# GIT HASH"
-HASH=$(TTX 1 git rev-parse --short HEAD)
+TTL 1 git rev-parse --short HEAD ---output
+HASH="$OUTPUT"
 echo "HASH: ${HASH}"
 
 echo "# GIT LOG"

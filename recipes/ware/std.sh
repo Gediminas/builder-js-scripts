@@ -52,11 +52,23 @@ PrintSystemInfo () {
 TTL () {
     local -i m=$1; shift
 
+    OUTPUT=
+    for arg do
+        shift
+        [ "$arg" = "---output" ] && OUTPUT=1 && continue
+        set -- "$@" "$arg"
+    done
+
     echo -ne "\n>> "
     # for arg in "${@}"; do echo -n "\"$arg\" "; done
     echo -n "${@}"
     echo " [TTL=${m}m]"
-    "$@" &
+
+    if [ -z "$OUTPUT" ]; then
+        "$@" &
+    else
+        ("$@" > "$WORK/tmp_ttl.txt") &
+    fi
     local -i pid=$!
     local -i span=0
     local -i s=$((m * 60))
@@ -78,6 +90,11 @@ TTL () {
             # kill -s SIGKILL $pid
         fi
     done
+
+    if [[ ! -z $OUTPUT ]]; then
+        OUTPUT=$(cat "$WORK/tmp_ttl.txt")
+        echo ">> OUTPUT: $OUTPUT"
+    fi
 }
 
 TTX () {
